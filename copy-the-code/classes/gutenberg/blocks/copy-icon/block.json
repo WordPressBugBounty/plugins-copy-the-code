@@ -1,0 +1,24 @@
+{
+	"$schema": "https://json.schemastore.org/block.json",
+	"apiVersion": 3,
+	"name": "ctc/copy-icon",
+	"title": "Copy Icon",
+	"description": "Allow user to copy code with an icon.",
+	"version": "1.0.0",
+	"icon": "clipboard",
+	"usesContext": [ "postId", "postType", "queryId" ],
+	"attributes": {
+		"content": {
+			"type": "string",
+			"default": ""
+		}
+    },
+	"category": "ctc-blocks",
+	"textdomain": "copy-the-code",
+	"style": "file:./css/style.css",
+	"editorScript": "file:./js/index.js",
+	"script": [
+		"jquery",
+		"file:./js/frontend.js"
+	]
+}

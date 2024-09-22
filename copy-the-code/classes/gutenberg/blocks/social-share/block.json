@@ -1,0 +1,54 @@
+{
+	"$schema": "https://json.schemastore.org/block.json",
+	"apiVersion": 3,
+	"name": "ctc/social-share",
+	"title": "Social Share",
+	"description": "Allow user to share content on social media.",
+	"version": "1.0.0",
+	"icon": "share",
+	"usesContext": [ "postId", "postType", "queryId" ],
+	"attributes": {
+		"label": {
+			"type": "string",
+			"default": "Share on:"
+		},
+		"showLabel": {
+			"type": "boolean",
+			"default": true
+		},
+		"facebook": {
+			"type": "boolean",
+			"default": true
+		},
+		"twitter": {
+			"type": "boolean",
+			"default": true
+		},
+		"whatsapp": {
+			"type": "boolean",
+			"default": true
+		}
+    },
+	"supports": {
+        "color": {
+            "background": true,
+            "text": true
+        },
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true,
+			"textAlign": true,
+			"__experimentalDefaultControls": {
+				"fontSize": true
+			}
+		},
+        "spacing": {
+			"margin": true,
+			"padding": true
+		}
+    },	
+	"category": "ctc-blocks",
+	"textdomain": "copy-the-code",
+	"style": "file:./css/style.css",
+	"editorScript": "file:./js/index.js"
+}
