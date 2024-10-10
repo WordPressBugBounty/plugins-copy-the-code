@@ -305,19 +305,27 @@ if ( ! class_exists( 'Copy_The_Code_Page' ) ) :
 		 */
 		public function enqueue_assets() {
 			$vars = $this->get_localize_vars();
-			if ( ! $vars['selectors'] ) {
-				return;
-			}
-
-			$conditions = [];
-			foreach ( $vars['selectors'] as $selector ) {
-				if ( ! $selector['conditions'] ) {
-					continue;
+			$meets_condition = Helpers::is_shortcode_used( 'copy');
+			if ( ! $meets_condition ) {
+				if ( ! $vars['selectors'] ) {
+					return;
 				}
 
-				$conditions = array_merge( $conditions, $selector['conditions'] );
+				$conditions = [];
+				foreach ( $vars['selectors'] as $selector ) {
+					if ( ! $selector['conditions'] ) {
+						continue;
+					}
+
+					$conditions = array_merge( $conditions, $selector['conditions'] );
+				}
+
+				if ( ! $this->meet_conditions( $conditions ) ) {
+					return;
+				}
 			}
-			if ( ! $this->meet_conditions( $conditions ) ) {
+
+			if ( ! $meets_condition ) {
 				return;
 			}
 

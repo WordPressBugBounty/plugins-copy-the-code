@@ -103,7 +103,7 @@ class Helpers {
 		}
 
 		$found = false;
-		if ( has_shortcode( $post->post_content, $shortcode ) ) {
+		if ( strpos( $post->post_content, '[' . $shortcode ) !== false ) {
 			$found = true;
 		}
 
