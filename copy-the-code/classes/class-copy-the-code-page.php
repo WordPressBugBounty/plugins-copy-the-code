@@ -320,9 +320,7 @@ if ( ! class_exists( 'Copy_The_Code_Page' ) ) :
 					$conditions = array_merge( $conditions, $selector['conditions'] );
 				}
 
-				if ( ! $this->meet_conditions( $conditions ) ) {
-					return;
-				}
+				$meets_condition = $this->meet_conditions( $conditions );
 			}
 
 			if ( ! $meets_condition ) {
