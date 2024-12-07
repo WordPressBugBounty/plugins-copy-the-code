@@ -148,7 +148,7 @@ if ( ! class_exists( 'Copy_The_Code_Shortcode' ) ) :
 				$tag = 'span';
 			}
 
-			return '<' . esc_html( $atts['tag'] ) . ' title="' . esc_attr( $atts['title'] ) . '" class="copy-the-code-shortcode ' . esc_attr( $atts['class'] ) . '" data-target="' . esc_attr( $atts['target'] ) . '" data-button-text="' . esc_attr( $atts['text'] ) . '" data-button-copy-text="' . esc_attr( $atts['copied-text'] ) . '" data-content="' . esc_attr( wp_strip_all_tags( $atts['content'] ) ) . '" data-copy-as="' . esc_attr( $atts['copy-as'] ) . '" data-link="' . esc_attr( $atts['link'] ) . '" style="color: ' . esc_attr( $color ) . '" >' . $display_content . '</' . esc_html( $atts['tag'] ) . '>';
+			return '<' . esc_html( $tag ) . ' title="' . esc_attr( $atts['title'] ) . '" class="copy-the-code-shortcode ' . esc_attr( $atts['class'] ) . '" data-target="' . esc_attr( $atts['target'] ) . '" data-button-text="' . esc_attr( $atts['text'] ) . '" data-button-copy-text="' . esc_attr( $atts['copied-text'] ) . '" data-content="' . esc_attr( wp_strip_all_tags( $atts['content'] ) ) . '" data-copy-as="' . esc_attr( $atts['copy-as'] ) . '" data-link="' . esc_attr( $atts['link'] ) . '" style="color: ' . esc_attr( $color ) . '" >' . $display_content . '</' . esc_html( $tag ) . '>';
 		}
 
 	}
