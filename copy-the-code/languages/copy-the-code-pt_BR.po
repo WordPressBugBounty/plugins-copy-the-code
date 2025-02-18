@@ -4,7 +4,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-11 11:26+0000\n"
 "PO-Revision-Date: 2022-09-15 17:22+0000\n"
-"Last-Translator: Mahesh Waghmare\n"
+"Last-Translator: Clipboard Agency\n"
 "Language-Team: Português do Brasil\n"
 "Language: pt-BR\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
@@ -39,8 +39,7 @@ msgstr ""
 #: includes/add-new-form.php:18 includes/dashboard.php:19
 msgid ""
 "Add the new button as per your requirement. See more with <a  "
-"target=\"_blank\"href=\"https://maheshwaghmare.com/doc/copy-anything-to-"
-"clipboard/\" target=\"_blank\">getting started guide</a>"
+"target=\"_blank\"href=\"https://clipboard.agency/doc/\" target=\"_blank\">getting started guide</a>"
 msgstr ""
 
 #: classes/class-copy-the-code-ask-permission.php:134
@@ -150,11 +149,11 @@ msgid "Getting Started"
 msgstr ""
 
 #. URI of the plugin
-msgid "https://github.com/maheshwaghmare/copy-the-code/"
+msgid "https://clipboard.agency/doc/"
 msgstr ""
 
 #. Author URI of the plugin
-msgid "https://maheshwaghmare.com/"
+msgid "https://clipboard.agency/doc/"
 msgstr ""
 
 #: includes/add-new-form.php:91
@@ -193,8 +192,7 @@ msgstr ""
 
 #: includes/add-new-form.php:346 includes/dashboard.php:119
 msgid ""
-"Please don't hesitate to <a href=\"http://maheshwaghmare.wordpress.com/?"
-"p=999\" target=\"_blank\">send request »</a>."
+"Please don't hesitate to <a href=\"https://clipboard.agency/doc/\" target=\"_blank\">send request »</a>."
 msgstr ""
 
 #: classes/class-copy-the-code-page.php:190
@@ -224,9 +222,8 @@ msgstr ""
 #: classes/opt-in/class-copy-the-code-opt-in.php:105
 msgid ""
 "Thank you for using \"<b>Copy Anything to Clipboard</b>\"! 🤩<br/>Please "
-"read a quick <a href=\"https://maheshwaghmare.com/copy-anything-to-"
-"clipboard/\" target=\"_blank\">getting started</a> guide. Also, Don't "
-"hesitate to <a href=\"https://maheshwaghmare.com/say-hello/\" "
+"read a quick <a href=\"https://clipboard.agency/doc\" target=\"_blank\">getting started</a> guide. Also, Don't "
+"hesitate to <a href=\"https://clipboard.agency/doc/\" "
 "target=\"_blank\">contact us</a> for any issue or help.<br/>It'll help us to "
 "understand more about you which we'll help you to grow your business 🚀"
 msgstr ""

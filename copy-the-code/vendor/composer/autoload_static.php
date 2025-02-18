@@ -35,6 +35,8 @@ class ComposerStaticInitb5c6444e3bb6dd35f30bbc983a860a40
         'CTC\\Gutenberg\\Blocks\\Social_Share' => __DIR__ . '/../..' . '/includes/gutenberg/blocks/social-share/class-block.php',
         'CTC\\Gutenberg\\Blocks\\Temp' => __DIR__ . '/../..' . '/includes/gutenberg/blocks/temp/class-block.php',
         'CTC\\Gutenberg\\Blocks\\Term_Title' => __DIR__ . '/../..' . '/includes/gutenberg/blocks/term-title/class-block.php',
+        'CTC\\Gutenberg\\Blocks\\Text' => __DIR__ . '/../..' . '/includes/gutenberg/blocks/text/class-block.php',
+        'CTC\\Gutenberg\\CSS' => __DIR__ . '/../..' . '/includes/gutenberg/controls/class-css.php',
         'CTC\\Gutenberg\\Controls' => __DIR__ . '/../..' . '/includes/gutenberg/controls/class-controls.php',
         'CTC\\Helper' => __DIR__ . '/../..' . '/includes/class-helper.php',
         'CTC\\KB' => __DIR__ . '/../..' . '/includes/class-kb.php',

@@ -2,13 +2,13 @@
 Contributors: clipboardagency, freemius
 Donate link: https://www.paypal.me/mwaghmare7/
 Tags: Clipboard, Copy, Copy to Clipboard, Coupon, Deal
-Tested up to: 6.7.1
-Stable tag: 4.0.4
+Tested up to: 6.7.2
+Stable tag: 4.0.5
 Requires PHP: 5.6
 Requires at least: 4.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
-Copy Anything to Clipboard is the #1 WordPress plugin with **263,316+** downloads 🚀
+Copy Anything to Clipboard is the #1 WordPress plugin with **272,624+** downloads 🚀
 
 == Description ==
 
@@ -187,7 +187,7 @@ For more info check out the following:
 * The [clipboard.agency](https://clipboard.agency/) official website 📌
 * The [Contact us](https://clipboard.agency/contact/) 👋
 * The [Getting started guide](https://clipboard.agency/doc/) 📃
-* All other my [WordPress plugins](https://wordpress.org/plugins/search/mahesh901122/) 💎
+* All other my [WordPress plugins](https://wordpress.org/plugins/search/clipboardagency/) 💎
 * Contribute with plugin [contact us](https://clipboard.agency/contact/) ✨
 * Make a [small donation](https://www.paypal.me/mwaghmare7/) for continue FREE support 💪
 
@@ -196,6 +196,11 @@ For more info check out the following:
 1. Install the <code>Copy Anything to Clipboard</code> plugin either via the WordPress plugin directory, or by uploading the files to your server at <code>wp-content/plugins</code>.
 
 == Changelog ==
+
+= 4.0.5 =
+
+* Improvement: Updated Freemius SDK library with version 2.11.0.
+* Improvement: Compatibility to WordPress 6.7.2.
 
 = 4.0.4 =
 

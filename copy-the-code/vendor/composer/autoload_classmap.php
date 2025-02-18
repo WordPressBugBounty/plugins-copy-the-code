@@ -34,6 +34,8 @@ return array(
     'CTC\\Gutenberg\\Blocks\\Social_Share' => $baseDir . '/includes/gutenberg/blocks/social-share/class-block.php',
     'CTC\\Gutenberg\\Blocks\\Temp' => $baseDir . '/includes/gutenberg/blocks/temp/class-block.php',
     'CTC\\Gutenberg\\Blocks\\Term_Title' => $baseDir . '/includes/gutenberg/blocks/term-title/class-block.php',
+    'CTC\\Gutenberg\\Blocks\\Text' => $baseDir . '/includes/gutenberg/blocks/text/class-block.php',
+    'CTC\\Gutenberg\\CSS' => $baseDir . '/includes/gutenberg/controls/class-css.php',
     'CTC\\Gutenberg\\Controls' => $baseDir . '/includes/gutenberg/controls/class-controls.php',
     'CTC\\Helper' => $baseDir . '/includes/class-helper.php',
     'CTC\\KB' => $baseDir . '/includes/class-kb.php',
