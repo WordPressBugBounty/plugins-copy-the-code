@@ -29,12 +29,35 @@ window.CTCWP = (function (window, document, navigator) {
 	}
 
 	function copyToClipboard() {
-		document.execCommand( 'copy' );
-		document.body.removeChild( textArea );
-
-		// Redirect to page.
-		if ( typeof copyTheCode !== 'undefined' && copyTheCode.redirect_url ) {
-			window.location.href = copyTheCode.redirect_url;
+		// Use modern Clipboard API (iOS 26+ compatible)
+		if ( navigator.clipboard && navigator.clipboard.writeText ) {
+			navigator.clipboard.writeText( textArea.value ).then(
+				function() {
+					document.body.removeChild( textArea );
+					// Redirect to page.
+					if ( typeof copyTheCode !== 'undefined' && copyTheCode.redirect_url ) {
+						window.location.href = copyTheCode.redirect_url;
+					}
+				}
+			).catch(
+				function() {
+					// Fallback to legacy method if Clipboard API fails
+					document.execCommand( 'copy' );
+					document.body.removeChild( textArea );
+					// Redirect to page.
+					if ( typeof copyTheCode !== 'undefined' && copyTheCode.redirect_url ) {
+						window.location.href = copyTheCode.redirect_url;
+					}
+				}
+			);
+		} else {
+			// Fallback for older browsers
+			document.execCommand( 'copy' );
+			document.body.removeChild( textArea );
+			// Redirect to page.
+			if ( typeof copyTheCode !== 'undefined' && copyTheCode.redirect_url ) {
+				window.location.href = copyTheCode.redirect_url;
+			}
 		}
 	}
 
@@ -50,8 +73,28 @@ window.CTCWP = (function (window, document, navigator) {
 		range.selectNodeContents( source[0] )
 		selection.removeAllRanges()
 		selection.addRange( range )
-		document.execCommand( 'copy' )
-		selection.removeAllRanges()
+		
+		// Get selected text
+		const selectedText = selection.toString();
+		
+		// Use modern Clipboard API (iOS 26+ compatible)
+		if ( navigator.clipboard && navigator.clipboard.writeText ) {
+			navigator.clipboard.writeText( selectedText ).then(
+				function() {
+					selection.removeAllRanges();
+				}
+			).catch(
+				function() {
+					// Fallback to legacy method if Clipboard API fails
+					document.execCommand( 'copy' );
+					selection.removeAllRanges();
+				}
+			);
+		} else {
+			// Fallback for older browsers
+			document.execCommand( 'copy' );
+			selection.removeAllRanges();
+		}
 	}
 
 	return {

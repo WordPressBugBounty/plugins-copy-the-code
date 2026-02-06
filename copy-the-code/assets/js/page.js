@@ -29,8 +29,24 @@ window.CopyTheCodeToClipboard = (function(window, document, navigator) {
 	}
 
 	function copyToClipboard() {
-		document.execCommand( 'copy' );
-		document.body.removeChild( textArea );
+		// Use modern Clipboard API (iOS 26+ compatible)
+		if ( navigator.clipboard && navigator.clipboard.writeText ) {
+			navigator.clipboard.writeText( textArea.value ).then(
+				function() {
+					document.body.removeChild( textArea );
+				}
+			).catch(
+				function() {
+					// Fallback to legacy method if Clipboard API fails
+					document.execCommand( 'copy' );
+					document.body.removeChild( textArea );
+				}
+			);
+		} else {
+			// Fallback for older browsers
+			document.execCommand( 'copy' );
+			document.body.removeChild( textArea );
+		}
 	}
 
 	copy = function(text) {

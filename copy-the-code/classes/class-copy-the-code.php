@@ -47,29 +47,7 @@ if ( !class_exists( 'Copy_The_Code' ) ) {
             require_once COPY_THE_CODE_DIR . 'classes/elementor/class-blocks.php';
             require_once COPY_THE_CODE_DIR . 'classes/gutenberg/class-blocks.php';
             require_once COPY_THE_CODE_DIR . 'classes/class-helpers.php';
-            $this->create_cron_jobs();
-            if ( $this->is_request( 'cron' ) ) {
-                require_once COPY_THE_CODE_DIR . 'classes/class-copy-the-code-analytics.php';
-            }
             add_action( 'plugins_loaded', [$this, 'localization_setup'], 9 );
-        }
-
-        /**
-         * Create cron jobs (clear them first).
-         */
-        private function create_cron_jobs() {
-            $args = [
-                'version' => COPY_THE_CODE_VER,
-            ];
-            if ( wp_next_scheduled( 'copy_the_code_tracker_send_event', $args ) ) {
-                return;
-            }
-            wp_schedule_event(
-                time() + 10,
-                apply_filters( 'copy_the_code_tracker_event_recurrence', 'weekly' ),
-                'copy_the_code_tracker_send_event',
-                $args
-            );
         }
 
         /**

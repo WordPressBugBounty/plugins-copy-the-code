@@ -1,14 +1,23 @@
-<?php
+<?php // @codingStandardsIgnoreLine
 /**
- * Plugin Name: Copy Anything to Clipboard
- * Plugin URI: https://clipboard.agency/
- * Description: Easily copy text or HTML to your clipboard 📋 with Copy Anything to Clipboard! Whether you need blockquotes, messages, wishes, shayari, offer codes, special symbols, code snippets, hidden content, or anything else, our plugin has you covered. 🥳 Discover all the possibilities with <a href="https://clipboard.agency/">Copy Anything to Clipboard</a>.
- * Version: 4.0.5
- * Author: Clipboard Team
- * Author URI: https://clipboard.agency/
- * Text Domain: copy-the-code
+ * Copy Anything to Clipboard Plugin.
  *
- * @package Copy the Code
+ * @package      Copy Anything to Clipboard
+ * @copyright    Copyright (C) 2026, Clipboard Agency - dev@clipboard.agency
+ * @link         https://clipboard.agency
+ * @since 5.0.0
+ *
+ * @wordpress-plugin
+ * Plugin Name:       Copy Anything to Clipboard
+ * Plugin URI:        https://clipboard.agency/
+ * Description:       Add copy-to-clipboard buttons to any element with the powerful <strong>Global Injector</strong> — no coding required. Features visual style presets (Button, Icon, Cover), display conditions, and live preview. Perfect for <strong>Code Snippets</strong>, <strong>Coupons</strong>, <strong>WooCommerce SKUs</strong>, and more.
+ * Version:           5.0.0
+ * Author:            Clipboard Agency
+ * Author URI:        https://clipboard.agency/
+ * License:           GPL v3
+ * License URI:       https://www.gnu.org/licenses/gpl-3.0.txt
+ * Text Domain:       ctc
+ * Domain Path:       /languages
  *
   */
 
@@ -16,29 +25,39 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Freemius conflict resolution.
+ *
+ * If another instance of this plugin (free or pro) has already initialized Freemius,
+ * just register this file with Freemius and exit. This prevents class redeclaration
+ * errors when both free and pro versions are active.
+ */
 if ( function_exists( 'ctc_fs' ) ) {
-	ctc_fs()->set_basename( false, __FILE__ );
-} else {
-	// Set constants.
-	define( 'COPY_THE_CODE_TITLE', esc_html__( 'Copy Anything to Clipboard', 'copy-the-code' ) );
-	define( 'COPY_THE_CODE_VER', '4.0.5' );
-	define( 'COPY_THE_CODE_FILE', __FILE__ );
-	define( 'COPY_THE_CODE_BASE', plugin_basename( COPY_THE_CODE_FILE ) );
-	define( 'COPY_THE_CODE_DIR', plugin_dir_path( COPY_THE_CODE_FILE ) );
-	define( 'COPY_THE_CODE_URI', plugins_url( '/', COPY_THE_CODE_FILE ) );
-	define( 'COPY_THE_CODE_GUTENBERG_BLOCKS', COPY_THE_CODE_DIR . 'classes/gutenberg/' );
-
-	// DO NOT REMOVE THIS IF, IT IS ESSENTIAL FOR THE `function_exists` CALL ABOVE TO PROPERLY WORK.
-	if ( ! function_exists( 'ctc_fs' ) ) {
-		require_once COPY_THE_CODE_DIR . 'classes/init.php';
+	$fs = ctc_fs();
+	if ( $fs ) {
+		// Register this file with Freemius.
+		// Use true for premium, false for free. Freemius handles this via @fs_premium_only.
+		$fs->set_basename( false, __FILE__ );
 	}
-
-	register_activation_hook( COPY_THE_CODE_FILE, 'copy_the_code_set_fresh_user' );
-
-	// Set as fresh user?
-	function copy_the_code_set_fresh_user() {
-		update_option( 'copy_the_code_fresh_user', 'yes' );
-	}
-
-	require_once COPY_THE_CODE_DIR . 'classes/class-copy-the-code.php';
+	return;
 }
+
+// Define plugin constants.
+define( 'CTC_VER', '5.0.0' );
+define( 'CTC_FILE', __FILE__ );
+define( 'CTC_BASE', plugin_basename( CTC_FILE ) );
+define( 'CTC_DIR', plugin_dir_path( CTC_FILE ) );
+define( 'CTC_URI', plugins_url( '/', CTC_FILE ) );
+define( 'CTC_GUTENBERG_DIR', CTC_DIR . 'includes/gutenberg/' );
+define( 'CTC_GUTENBERG_URI', CTC_URI . 'includes/gutenberg/' );
+define( 'CTC_ELEMENTOR_DIR', CTC_DIR . 'includes/elementor/' );
+define( 'CTC_ELEMENTOR_URI', CTC_URI . 'includes/elementor/' );
+
+// Initialize Freemius.
+require_once CTC_DIR . 'includes/freemius.php';
+
+// Include the main plugin class.
+require_once CTC_DIR . 'includes/class-core.php';
+
+// Start the plugin.
+ctc();

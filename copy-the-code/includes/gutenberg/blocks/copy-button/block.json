@@ -1,0 +1,32 @@
+{
+	"$schema": "https://json.schemastore.org/block.json",
+	"apiVersion": 3,
+	"name": "ctc/copy-button",
+	"title": "Copy Button",
+	"description": "Allow user to copy code with a button.",
+	"version": "1.0.0",
+	"icon": "clipboard",
+	"usesContext": [ "postId", "postType", "queryId" ],
+	"attributes": {
+		"content": {
+			"type": "string",
+			"default": ""
+		},
+		"buttonText": {
+			"type": "string",
+			"default": "Copy to Clipboard"
+		},
+		"buttonTextCopied": {
+			"type": "string",
+			"default": "Copied!"
+		}
+    },
+	"category": "ctc-blocks",
+	"textdomain": "ctc",
+	"style": "file:./css/style.css",
+	"editorScript": "file:./js/index.js",
+	"script": [
+		"jquery",
+		"file:./js/frontend.js"
+	]
+}

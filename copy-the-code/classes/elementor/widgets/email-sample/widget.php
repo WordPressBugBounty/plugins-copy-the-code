@@ -157,7 +157,7 @@ class Sample extends Widget_Base {
         $this->add_control( 'sample_email', [
             'label'       => esc_html__( 'Email Sample', 'copy-the-code' ),
             'type'        => Controls_Manager::TEXTAREA,
-            'default'     => "Subject: Application for [Job Title] - [Your Name]\r\n\r\nDear [Hiring Manager's Name],\r\n\r\nI hope this email finds you well. I am writing to express my strong interest in the [Job Title] position at [Company Name], as advertised on your website. With my background in [Relevant Skill/Experience] and a passion for [Company's Mission or Industry], I believe I am a strong fit for your team.\r\n\r\nSincerely,\r\n[Your Name]\r\n[Your Contact Information]",
+            'default'     => "Subject: Application for [Job Title] - [Your Name]\n\nDear [Hiring Manager's Name],\n\nI hope this email finds you well. I am writing to express my strong interest in the [Job Title] position at [Company Name], as advertised on your website. With my background in [Relevant Skill/Experience] and a passion for [Company's Mission or Industry], I believe I am a strong fit for your team.\n\nSincerely,\n[Your Name]\n[Your Contact Information]",
             'rows'        => 10,
             'description' => esc_html__( 'Use [ ] to highlight the text.', 'copy-the-code' ),
         ] );

@@ -5,8 +5,12 @@ if ( !function_exists( 'ctc_fs' ) ) {
     function ctc_fs() {
         global $ctc_fs;
         if ( !isset( $ctc_fs ) ) {
-            // Include Freemius SDK.
-            require_once dirname( __FILE__ ) . '/freemius/start.php';
+            // Include Freemius SDK from Composer vendor directory.
+            $freemius_sdk_path = dirname( dirname( __FILE__ ) ) . '/vendor/freemius/wordpress-sdk/start.php';
+            if ( !file_exists( $freemius_sdk_path ) ) {
+                wp_die( 'Freemius SDK not found. Please run: composer install' );
+            }
+            require_once $freemius_sdk_path;
             $ctc_fs = fs_dynamic_init( [
                 'id'              => '2780',
                 'slug'            => 'copy-the-code',

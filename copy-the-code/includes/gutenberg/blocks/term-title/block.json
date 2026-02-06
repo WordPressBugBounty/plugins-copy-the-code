@@ -1,0 +1,53 @@
+{
+	"$schema": "https://json.schemastore.org/block.json",
+	"apiVersion": 3,
+	"name": "ctc/term-title",
+	"title": "Term Title",
+	"description": "Display the title of the term.",
+	"version": "1.0.0",
+	"icon": "smiley",
+	"attributes": {
+		"title": {
+			"type": "string",
+			"default": ""
+		},
+		"taxonomy": {
+			"type": "object",
+			"default": {
+				"slug": "category",
+				"name": "Category"
+			}
+		},
+		"search": {
+			"type": "string",
+			"default": ""
+		}
+    },
+	"supports": {
+        "color": {
+            "background": true,
+            "text": true,
+            "link": true,
+			"enableContrastChecker": true,
+			"gradients": true
+        },
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true,
+			"textAlign": true,
+			"__experimentalDefaultControls": {
+				"fontSize": true
+			}
+		},
+        "spacing": {
+			"margin": true,
+			"padding": true
+		},
+		"align": true
+    },	
+	"category": "ctc-blocks",
+	"textdomain": "ctc",
+	"style": "file:./css/style.css",
+	"editorScript": "file:./js/index.js",
+	"editorStyle": "file:./css/editor.css"
+}

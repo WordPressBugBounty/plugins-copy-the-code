@@ -323,23 +323,74 @@ window.CopyTheCodeToClipboard = (function (window, document, navigator) {
 
 				var range = document.createRange();
 				range.selectNode( source[0] );
-				window.getSelection().addRange( range );
-				document.execCommand( 'copy' );
+				var selection = window.getSelection();
+				selection.removeAllRanges();
+				selection.addRange( range );
+				
+				// Get selected text content
+				var selectedText = selection.toString() || source[0].textContent || '';
+				
+				// Use modern Clipboard API (iOS 26+ compatible)
+				if ( navigator.clipboard && navigator.clipboard.writeText ) {
+					navigator.clipboard.writeText( selectedText ).then(
+						function() {
+							// Clear selection.
+							if (window.getSelection) {
+								if (window.getSelection().empty) {  // Chrome
+									window.getSelection().empty();
+								} else if (window.getSelection().removeAllRanges) {  // Firefox
+									window.getSelection().removeAllRanges();
+								}
+							} else if (document.selection) {  // IE?
+								document.selection.empty();
+							}
 
-				// Clear selection.
-				if (window.getSelection) {
-					if (window.getSelection().empty) {  // Chrome
-						window.getSelection().empty();
-					} else if (window.getSelection().removeAllRanges) {  // Firefox
-						window.getSelection().removeAllRanges();
+							// Show button again.
+							if ( 'inside' === button_position ) {
+								$( '.copy-the-code-button' ).show();
+							}
+						}
+					).catch(
+						function() {
+							// Fallback to legacy method if Clipboard API fails
+							document.execCommand( 'copy' );
+							
+							// Clear selection.
+							if (window.getSelection) {
+								if (window.getSelection().empty) {  // Chrome
+									window.getSelection().empty();
+								} else if (window.getSelection().removeAllRanges) {  // Firefox
+									window.getSelection().removeAllRanges();
+								}
+							} else if (document.selection) {  // IE?
+								document.selection.empty();
+							}
+
+							// Show button again.
+							if ( 'inside' === button_position ) {
+								$( '.copy-the-code-button' ).show();
+							}
+						}
+					);
+				} else {
+					// Fallback for older browsers
+					document.execCommand( 'copy' );
+
+					// Clear selection.
+					if (window.getSelection) {
+						if (window.getSelection().empty) {  // Chrome
+							window.getSelection().empty();
+						} else if (window.getSelection().removeAllRanges) {  // Firefox
+							window.getSelection().removeAllRanges();
+						}
+					} else if (document.selection) {  // IE?
+						document.selection.empty();
 					}
-				} else if (document.selection) {  // IE?
-					document.selection.empty();
-				}
 
-				// Show button again.
-				if ( 'inside' === button_position ) {
-					$( '.copy-the-code-button' ).show();
+					// Show button again.
+					if ( 'inside' === button_position ) {
+						$( '.copy-the-code-button' ).show();
+					}
 				}
 
 			} else {

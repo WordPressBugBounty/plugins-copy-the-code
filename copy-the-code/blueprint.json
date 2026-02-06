@@ -1,0 +1,27 @@
+{
+  "$schema": "https://playground.wordpress.net/blueprint-schema.json",
+  "landingPage": "/wp-admin/plugins.php",
+  "preferredVersions": {
+    "php": "8.0",
+    "wp": "latest"
+  },
+  "features": {
+    "syncPluginUpdates": true
+  },
+  "steps": [
+    {
+      "step": "installPlugin",
+      "pluginZipFile": {
+        "resource": "wordpress.org/plugins",
+        "slug": "copy-the-code"
+      }
+    },
+    {
+      "step": "activatePlugins",
+      "plugins": [
+        "copy-the-code/copy-the-code.php"
+      ]
+    }
+  ]
+}
+
