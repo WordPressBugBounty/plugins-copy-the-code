@@ -70,10 +70,10 @@ class Frontend {
 			return;
 		}
 
-		// Enqueue CTC vendor library (CopyEngine, CapabilityDetector).
+		// Enqueue CTC lib core library (CopyEngine, CapabilityDetector).
 		wp_enqueue_script(
-			'ctc-vendor',
-			CTC_URI . 'assets/frontend/js/vendor/ctc.js',
+			'ctc-lib-core',
+			CTC_URI . 'assets/frontend/js/lib/ctc.js',
 			[],
 			CTC_VER,
 			true
@@ -84,7 +84,7 @@ class Frontend {
 		wp_enqueue_script(
 			'ctc-global-injector-frontend',
 			CTC_URI . 'assets/frontend/js/global-injector.js',
-			[ 'ctc-vendor' ],
+			[ 'ctc-lib-core' ],
 			CTC_VER,
 			true
 		);

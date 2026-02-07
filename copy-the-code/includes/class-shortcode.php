@@ -184,6 +184,11 @@ class Shortcode {
 	 * @return array Normalized attributes.
 	 */
 	private function normalize_legacy_atts( $atts, $content ) {
+		// Decode HTML entities in content so [ ] work (e.g. &#91; &#93;).
+		if ( ! empty( $atts['content'] ) ) {
+			$atts['content'] = html_entity_decode( $atts['content'], ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+		}
+
 		// Legacy support: 'content' attribute contains what to copy.
 		// 'text' attribute is the display text in legacy usage.
 		// Example: [copy text="Location" content="/wp [...]"] - displays "Location", copies "/wp [...]"
@@ -661,20 +666,18 @@ class Shortcode {
 			return;
 		}
 
-		// Enqueue the CTC vendor library.
 		wp_enqueue_script(
-			'ctc-vendor',
-			CTC_URI . 'assets/frontend/js/vendor/ctc.js',
+			'ctc-lib-core',
+			CTC_URI . 'assets/frontend/js/lib/ctc.js',
 			[],
 			CTC_VER,
 			true
 		);
 
-		// Enqueue the shortcode JS.
 		wp_enqueue_script(
 			'ctc-shortcode',
 			CTC_URI . 'assets/frontend/js/shortcode.js',
-			[ 'ctc-vendor' ],
+			[ 'ctc-lib-core' ],
 			CTC_VER,
 			true
 		);
@@ -751,6 +754,26 @@ class Shortcode {
 .ctc-shortcode__icon svg {
 	width: 14px;
 	height: 14px;
+}
+
+/* Prevent giant icons when shortcode is inside tables (table cells may inherit large font-size). */
+table .ctc-shortcode__icon,
+table .ctc-shortcode__icon svg,
+table .ctc-cover-icon,
+table .ctc-cover-icon svg {
+	width: 14px !important;
+	height: 14px !important;
+	min-width: 14px;
+	min-height: 14px;
+	max-width: 14px !important;
+	max-height: 14px !important;
+	flex-shrink: 0;
+}
+table .ctc-cover-icon svg {
+	width: 12px !important;
+	height: 12px !important;
+	max-width: 12px !important;
+	max-height: 12px !important;
 }
 
 .ctc-shortcode__success {

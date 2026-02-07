@@ -73,7 +73,7 @@ class Icon {
 		// Core copy functionality - only on frontend when block is used.
 		if ( ! is_admin() ) {
 			wp_enqueue_script( 'ctc-core', CTC_URI . 'includes/assets/js/core.js', [ 'jquery' ], CTC_VER, true );
-			wp_enqueue_script( 'ctc-clipboard', CTC_URI . 'assets/frontend/js/vendor/ctc.js', [ 'jquery' ], CTC_VER, true );
+			wp_enqueue_script( 'ctc-lib-core', CTC_URI . 'assets/frontend/js/lib/ctc.js', [ 'jquery' ], CTC_VER, true );
 		}
 	}
 

@@ -11,7 +11,7 @@
  * Plugin Name:       Copy Anything to Clipboard
  * Plugin URI:        https://clipboard.agency/
  * Description:       Add copy-to-clipboard buttons to any element with the powerful <strong>Global Injector</strong> — no coding required. Features visual style presets (Button, Icon, Cover), display conditions, and live preview. Perfect for <strong>Code Snippets</strong>, <strong>Coupons</strong>, <strong>WooCommerce SKUs</strong>, and more.
- * Version:           5.0.0
+ * Version:           5.0.1
  * Author:            Clipboard Agency
  * Author URI:        https://clipboard.agency/
  * License:           GPL v3

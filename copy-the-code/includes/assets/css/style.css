@@ -23,3 +23,13 @@
 .copied .ctc-with-icon .check-icon {
 	display: block;
 }
+
+/* Prevent giant copy icons when blocks/shortcodes are inside table cells. */
+table .ctc-with-icon svg,
+table .ctc-block-copy svg {
+	width: 16px !important;
+	height: 16px !important;
+	max-width: 16px !important;
+	max-height: 16px !important;
+	flex-shrink: 0;
+}

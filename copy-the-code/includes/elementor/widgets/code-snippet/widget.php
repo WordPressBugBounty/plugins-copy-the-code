@@ -36,8 +36,8 @@ class CodeSnippet extends Widget_Base {
             'all'
         );
         wp_enqueue_script(
-            'ctc-clipboard',
-            CTC_URI . 'assets/frontend/js/vendor/ctc.js',
+            'ctc-lib-core',
+            CTC_URI . 'assets/frontend/js/lib/ctc.js',
             ['jquery'],
             CTC_VER,
             true
@@ -45,7 +45,7 @@ class CodeSnippet extends Widget_Base {
         wp_enqueue_script(
             'ctc-blocks-core',
             CTC_URI . 'includes/assets/js/core.js',
-            ['ctc-clipboard'],
+            ['ctc-lib-core'],
             CTC_VER,
             true
         );

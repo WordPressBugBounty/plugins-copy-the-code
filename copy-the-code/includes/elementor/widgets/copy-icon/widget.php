@@ -26,7 +26,7 @@ class CopyIcon extends Widget_Base {
 		parent::__construct( $data, $args );
 
 		// Core.
-		wp_enqueue_script( 'ctc-clipboard', CTC_URI . 'assets/frontend/js/vendor/ctc.js', [ 'jquery' ], CTC_VER, true );
+		wp_enqueue_script( 'ctc-lib-core', CTC_URI . 'assets/frontend/js/lib/ctc.js', [ 'jquery' ], CTC_VER, true );
 
 		// Block.
 		wp_enqueue_style( 'ctc-el-copy-icon', CTC_URI . 'includes/elementor/widgets/copy-icon/style.css', [], CTC_VER );
@@ -36,7 +36,7 @@ class CopyIcon extends Widget_Base {
 	 * Get script dependencies
 	 */
 	public function get_script_depends() {
-		return [ 'ctc-clipboard' ];
+		return [ 'ctc-lib-core' ];
 	}
 
 	/**

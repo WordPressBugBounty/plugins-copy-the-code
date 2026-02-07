@@ -3,7 +3,7 @@ Contributors: clipboardagency, freemius
 Donate link: https://www.paypal.me/mwaghmare7/
 Tags: clipboard, copy, copy-to-clipboard, copy-button, copy-code
 Tested up to: 6.9
-Stable tag: 5.0.0
+Stable tag: 5.0.1
 Requires PHP: 5.6
 Requires at least: 4.4
 License: GPLv2 or later
@@ -296,6 +296,15 @@ For more info check out the following:
 For detailed setup instructions, visit the [Getting Started Guide](https://clipboard.agency/doc/).
 
 == Changelog ==
+
+= 5.0.1 =
+
+**Bug fixes and support issues (post-5.0.0)** — Thanks to the users who reported these on the [support forum](https://wordpress.org/support/plugin/copy-the-code/).
+
+* **Fix: 404 on ctc.js** - Moved script to `assets/frontend/js/lib/ctc.js` (renamed from vendor/ to avoid .gitignore conflict). Global Injector and shortcode enqueue the copy engine; fallbacks remain when script is unavailable. [Thanks @contemplate](https://wordpress.org/support/topic/404-js-file/)
+* **Fix: Giant copy icons in tables** - Copy icons inside table cells no longer scale with table font-size. Added CSS constraints for shortcode and block copy icons when inside `table` elements.
+* **Fix: Square brackets in shortcode content** - Legacy shortcodes using `content="... &#91;...&#93; ..."` now copy the correct `[` and `]` characters. The `content` attribute is decoded from HTML entities before use.
+* **Fix: Shortcode script loading** - Shortcode frontend script no longer depends on the removed vendor script; it loads independently with Clipboard API fallbacks.
 
 = 5.0.0 =
 

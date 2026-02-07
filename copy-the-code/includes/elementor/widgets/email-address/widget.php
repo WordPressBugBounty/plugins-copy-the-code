@@ -28,8 +28,8 @@ class Address extends Widget_Base {
             'all'
         );
         wp_enqueue_script(
-            'ctc-clipboard',
-            CTC_URI . 'assets/frontend/js/vendor/ctc.js',
+            'ctc-lib-core',
+            CTC_URI . 'assets/frontend/js/lib/ctc.js',
             ['jquery'],
             CTC_VER,
             true

@@ -36,8 +36,8 @@ class Generator extends Widget_Base {
             'all'
         );
         wp_enqueue_script(
-            'ctc-clipboard',
-            CTC_URI . 'assets/frontend/js/vendor/ctc.js',
+            'ctc-lib-core',
+            CTC_URI . 'assets/frontend/js/lib/ctc.js',
             ['jquery'],
             CTC_VER,
             true
@@ -45,7 +45,7 @@ class Generator extends Widget_Base {
         wp_enqueue_script(
             'ctc-blocks-core',
             CTC_URI . 'includes/assets/js/core.js',
-            ['ctc-clipboard'],
+            ['ctc-lib-core'],
             CTC_VER,
             true
         );
@@ -53,7 +53,7 @@ class Generator extends Widget_Base {
         wp_enqueue_script(
             'ctc-el-ai-prompt-generator',
             CTC_URI . 'includes/elementor/widgets/ai-prompt-generator/script.js',
-            ['jquery', 'ctc-clipboard', 'ctc-blocks-core'],
+            ['jquery', 'ctc-lib-core', 'ctc-blocks-core'],
             CTC_VER,
             'all'
         );
