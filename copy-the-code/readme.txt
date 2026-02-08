@@ -3,12 +3,12 @@ Contributors: clipboardagency, freemius
 Donate link: https://www.paypal.me/mwaghmare7/
 Tags: clipboard, copy, copy-to-clipboard, copy-button, copy-code
 Tested up to: 6.9
-Stable tag: 5.0.1
+Stable tag: 5.1.0
 Requires PHP: 5.6
 Requires at least: 4.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
-Copy Anything to Clipboard is the #1 WordPress plugin with **299,302+** downloads 🚀
+Copy Anything to Clipboard is the #1 WordPress plugin with **3012,899+** downloads 🚀
 
 == Description ==
 
@@ -36,9 +36,9 @@ Perfect for bloggers, developers, e-commerce stores, educational websites, and a
 
 There are 5 ways to use the "Copy Anything to Clipboard" plugin:
 
-1. **NEW: [Global Injector](https://clipboard.agency/doc/usage/global-injector/)** - Advanced injection with display conditions
-2. [Automatically with "CSS Selector"](https://clipboard.agency/doc/usage/css-selectors/)
-3. [Manually with "Shortcode"](https://clipboard.agency/doc/usage/shortcode/)
+1. **NEW: [Global Injector](https://docs.clipboard.agency/guides/global-injector/)** - Advanced injection with display conditions
+2. [Automatically with "CSS Selector"](https://docs.clipboard.agency/guides/css-selectors/)
+3. [Manually with "Shortcode"](https://docs.clipboard.agency/guides/shortcodes/)
 4. Manually with "Elementor widgets"
 5. Manually with "Gutenberg blocks"
 
@@ -80,8 +80,8 @@ Use this method, if you want to add the copy button automatically to all the ele
 
 For more details read:
 
-- [Add the copy button to Blockquote](https://clipboard.agency/blog/add-copy-button-to-blockquote/)
-- [Add the copy button to Code Snippet](https://clipboard.agency/blog/add-copy-button-to-code-snippet/)
+- [Add the copy button to Blockquote](https://docs.clipboard.agency/guides/shortcodes/)
+- [Add the copy button to Code Snippet](https://clipboard.agency/blog/how-to-add-copy-buttons-to-code-blocks/)
 
 === METHOD 3 – Manually with "Shortcode"
 
@@ -196,7 +196,7 @@ For more details read:
 
 ------
 
-Get up to 20% to 30% discount by [upgrading to pro](https://clipboard.agency/#pricing), make this shopping extravaganza unforgettable! 🎁
+Get up to 20% to 30% discount by [upgrading to pro](https://clipboard.agency/pricing/), make this shopping extravaganza unforgettable! 🎁
 
 ------
 
@@ -296,6 +296,26 @@ For more info check out the following:
 For detailed setup instructions, visit the [Getting Started Guide](https://clipboard.agency/doc/).
 
 == Changelog ==
+
+= 5.1.0 =
+
+* **New: Main Rule List** - Custom rules UI at Settings → Global Injector (`page=ctc-rules`): table with Status toggle, Rule Name/Target, Visual Style, Location; row actions Edit, Duplicate, Delete; search and status filter; empty state.
+* **New: Dashboard (Home)** - Copy to Clipboard dashboard at `page=ctc` (Settings → Copy to Clipboard).
+* **New: Shared admin components** - AdminHeader, ConfirmModal, Footer, Icons, ProBadge used by Dashboard, Main Rule List, and Rule Editor.
+* **Improvement: Rule Editor** - Header uses shared AdminHeader with back link to Global Rules list.
+* **Improvement: Legacy CPT redirects** - "Add New" and list edit links for `copy-to-clipboard` redirect to Global Injector.
+* **Developer:** `get_admin_rules()` API for admin list data; Main Rule List and Dashboard use React + Tailwind under `.ctc-admin-root`.
+* **Improvement: Global Injector CSS from PHP** - Global Injector styles (Button, Icon, Cover) are now output as minified inline CSS from PHP via the new Inline_CSS class. Only the styles and positions used by active rules are included; the `ctc/global_injector/inline_css` filter still applies to the final CSS.
+* **Fix: Cover style fatal error** - Added missing `get_global_injector_css()` method to the Cover style class so inline CSS builds correctly when Cover style is used (fixes "Call to undefined method Cover::get_global_injector_css()").
+* **New: Admin bar quick-edit for Global Injector** - When viewing a page where Global Injector rules apply, admins see a "CTC" item (with clipboard icon) in the admin bar. Sub-items list "Edit: [Rule name]" for each rule on the page and open the Global Injector settings with that rule selected.
+* **Improvement: Global Injector URL support** - The settings page now supports a `?rule=ID` query parameter to open the editor with a specific rule selected (e.g. from the admin bar or bookmarks). Added `get_selected_rule_id()` helper.
+* **New: Shortcode `redirect` attribute** - The `[copy]` shortcode now supports a `redirect` attribute for copy-then-redirect flows (e.g. `[copy redirect="https://store.com"]CODE10[/copy]`). After copying, the user is sent to the given URL. The existing `link` attribute remains supported for backward compatibility and has the same effect as `redirect`.
+* **Fix: Shortcode display text with inner content** - When both `text` and inner content are present (e.g. `[copy text="Hello World"]Copy this[/copy]`), the visible label now uses the inner content ("Copy this") and `text` is used only for the copy payload. Previously the label showed the `text` value.
+* **Fix: Native preset CSS when using tag="a"** - Using `tag="a"` for link-style copy buttons now correctly loads the native preset CSS so theme link styling is applied.
+* **Fix: Shortcode `link` attribute redirect** - The "Copy & Redirect" / "Combining Multiple Attributes" flow now works: when `link="https://example.com"` is set, the shortcode outputs `data-ctc-link` and the frontend opens the URL in a new tab after a successful copy (e.g. after "Copied! Redirecting...").
+* **Improvement: Shortcode performance** - Inline CSS for the shortcode is now output only for presets actually used on the page (inline, native, button, icon, cover), and the CSS is minified to reduce payload size.
+* **Improvement: Global Injector rules sidebar** - When opening the settings page with a specific rule (e.g. `?rule=318`), the selected rule is now scrolled to the top of the rules list within the sidebar only, without scrolling the whole page or moving the admin header out of view.
+* **Fix: Giant copy icons in tables** - Added explicit `width` and `height` attributes (24×24) to all Global Injector SVG icons (Button, Icon, and Cover styles) so theme CSS cannot scale them unexpectedly inside table cells. [Thanks @akashathu](https://wordpress.org/support/topic/giant-icons-in-table/)
 
 = 5.0.1 =
 

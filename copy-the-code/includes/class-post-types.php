@@ -5,7 +5,7 @@
  * Handles registration of custom post types for the plugin.
  *
  * @package CTC
- * @since 5.0.0
+ * @since 5.1.0
  */
 
 namespace CTC;
@@ -43,7 +43,7 @@ class Post_Types {
 		add_action( 'init', [ $this, 'register' ] );
 
 		/*
-		 * @TODO: Remove these redirects once the legacy post type editor is fully deprecated.
+		 * Remove these redirects once the legacy post type editor is fully deprecated.
 		 * These redirect the "Add New" button and edit links to the Global Injector page.
 		 */
 		add_filter( 'admin_url', [ $this, 'redirect_add_new_to_global_injector' ], 10, 2 );
@@ -53,9 +53,9 @@ class Post_Types {
 	/**
 	 * Redirect "Add New" button to Global Injector page.
 	 *
-	 * @TODO: Remove this method once the legacy post type editor is fully deprecated.
+	 * Remove this method once the legacy post type editor is fully deprecated.
 	 *
-	 * @since 5.0.0
+	 * @since 5.1.0
 	 *
 	 * @param string $url  The complete admin area URL including scheme and path.
 	 * @param string $path Path relative to the admin area URL.
@@ -72,9 +72,9 @@ class Post_Types {
 	/**
 	 * Conditionally add edit link filter only on copy-to-clipboard list table.
 	 *
-	 * @TODO: Remove this method once the legacy post type editor is fully deprecated.
+	 * Remove this method once the legacy post type editor is fully deprecated.
 	 *
-	 * @since 5.0.0
+	 * @since 5.1.0
 	 *
 	 * @param \WP_Screen $screen Current admin screen object.
 	 */
@@ -90,9 +90,9 @@ class Post_Types {
 	 * This filter is only added on the copy-to-clipboard list table screen,
 	 * so we don't need to check post type here.
 	 *
-	 * @TODO: Remove this method once the legacy post type editor is fully deprecated.
+	 * Remove this method once the legacy post type editor is fully deprecated.
 	 *
-	 * @since 5.0.0
+	 * @since 5.1.0
 	 *
 	 * @param string $link    The edit link.
 	 * @param int    $post_id Post ID.
@@ -105,7 +105,7 @@ class Post_Types {
 	/**
 	 * Register custom post types.
 	 *
-	 * @since 5.0.0
+	 * @since 5.1.0
 	 */
 	public function register() {
 		$labels = [
@@ -130,7 +130,7 @@ class Post_Types {
 			'taxonomies'          => [],
 			'public'              => false,
 			'show_ui'             => true,
-			'show_in_menu'        => 'options-general.php',
+			'show_in_menu'        => false,
 			'show_in_admin_bar'   => false,
 			'menu_position'       => null,
 			'menu_icon'           => 'dashicons-clipboard',

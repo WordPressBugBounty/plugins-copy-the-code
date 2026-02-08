@@ -13,6 +13,7 @@ class ComposerStaticInit4e661db1292954d663b67440ef91fbe1
     public static $classMap = array (
         'CTC' => __DIR__ . '/../..' . '/includes/class-core.php',
         'CTC\\Base' => __DIR__ . '/../..' . '/includes/class-base.php',
+        'CTC\\Dashboard' => __DIR__ . '/../..' . '/includes/class-dashboard.php',
         'CTC\\Elementor\\Block\\AI\\Prompt\\Generator' => __DIR__ . '/../..' . '/includes/elementor/widgets/ai-prompt-generator/widget.php',
         'CTC\\Elementor\\Block\\Blockquote' => __DIR__ . '/../..' . '/includes/elementor/widgets/blockquote/widget.php',
         'CTC\\Elementor\\Block\\CodeSnippet' => __DIR__ . '/../..' . '/includes/elementor/widgets/code-snippet/widget.php',
@@ -33,6 +34,8 @@ class ComposerStaticInit4e661db1292954d663b67440ef91fbe1
         'CTC\\Global_Injector' => __DIR__ . '/../..' . '/includes/global-injector/class-global-injector.php',
         'CTC\\Global_Injector\\Display_Conditions' => __DIR__ . '/../..' . '/includes/global-injector/class-display-conditions.php',
         'CTC\\Global_Injector\\Frontend' => __DIR__ . '/../..' . '/includes/global-injector/class-frontend.php',
+        'CTC\\Global_Injector\\Inline_CSS' => __DIR__ . '/../..' . '/includes/global-injector/class-inline-css.php',
+        'CTC\\Global_Injector\\Main_Rule_List' => __DIR__ . '/../..' . '/includes/global-injector/class-main-rule-list.php',
         'CTC\\Global_Injector\\Rest' => __DIR__ . '/../..' . '/includes/global-injector/class-rest.php',
         'CTC\\Global_Injector\\Style_Presets' => __DIR__ . '/../..' . '/includes/global-injector/class-style-presets.php',
         'CTC\\Global_Injector\\Styles\\Button' => __DIR__ . '/../..' . '/includes/global-injector/styles/class-button.php',

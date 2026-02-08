@@ -34,4 +34,17 @@ class Helper {
 		 */
 		return apply_filters( 'ctc/is_pro', function_exists( 'ctc_fs' ) && ctc_fs()->is__premium_only() );
 	}
+
+	/**
+	 * Minify CSS: strip comments and collapse whitespace.
+	 *
+	 * @since 5.0.2
+	 * @param string $css Raw CSS.
+	 * @return string Minified CSS.
+	 */
+	public static function minify_css( $css ) {
+		$css = (string) preg_replace( '/\/\*[\s\S]*?\*\//', '', $css );
+		$css = (string) preg_replace( '/\s+/', ' ', $css );
+		return trim( $css );
+	}
 }

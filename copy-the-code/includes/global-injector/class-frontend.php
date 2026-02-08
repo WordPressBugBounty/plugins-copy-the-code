@@ -12,6 +12,7 @@ namespace CTC\Global_Injector;
 
 use CTC\Helper;
 use CTC\Global_Injector\Display_Conditions;
+use CTC\Global_Injector\Inline_CSS;
 use CTC\Global_Injector\Styles\Button as ButtonStyle;
 use CTC\Global_Injector\Styles\Icon as IconStyle;
 use CTC\Global_Injector\Styles\Cover as CoverStyle;
@@ -54,6 +55,7 @@ class Frontend {
 	 */
 	public function __construct() {
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_assets' ] );
+		add_action( 'admin_bar_menu', [ $this, 'add_admin_bar_links' ], 100 );
 	}
 
 	/**
@@ -63,9 +65,7 @@ class Frontend {
 	 * @return void
 	 */
 	public function enqueue_assets() {
-		// Check if there are any active rules before loading assets.
-		$rules = $this->get_active_rules();
-
+		$rules = $this->get_rules_for_page();
 		if ( empty( $rules ) ) {
 			return;
 		}
@@ -80,7 +80,6 @@ class Frontend {
 		);
 
 		// Enqueue Global Injector frontend script.
-		// CSS is generated dynamically by JS - no separate CSS file needed.
 		wp_enqueue_script(
 			'ctc-global-injector-frontend',
 			CTC_URI . 'assets/frontend/js/global-injector.js',
@@ -88,6 +87,18 @@ class Frontend {
 			CTC_VER,
 			true
 		);
+
+		// Inline CSS: only for needed styles/positions, minified, filterable. No separate CSS file.
+		$needed     = $this->get_needed_styles_and_positions( $rules );
+		$raw_css    = Inline_CSS::build( $needed['styles'], $needed['positions'] );
+		$min_css    = Helper::minify_css( $raw_css );
+		$inline_css = (string) apply_filters( 'ctc/global_injector/inline_css', $min_css );
+
+		if ( $inline_css !== '' ) {
+			wp_register_style( 'ctc-global-injector-inline', false, [], CTC_VER );
+			wp_enqueue_style( 'ctc-global-injector-inline' );
+			wp_add_inline_style( 'ctc-global-injector-inline', $inline_css );
+		}
 
 		// Localize script with rules and page context.
 		wp_localize_script(
@@ -124,6 +135,64 @@ class Frontend {
 	}
 
 	/**
+	 * Get rules that should load on the current page (single source of truth).
+	 *
+	 * Used for enqueue_assets, admin bar, and localized data. No scripts or CSS
+	 * are enqueued when this returns an empty array.
+	 *
+	 * @since 5.0.0
+	 * @return array List of rule data arrays for rules that pass display conditions.
+	 */
+	public function get_rules_for_page() {
+		$rules = $this->get_active_rules();
+		return apply_filters( 'ctc/global_injector/rules_for_page', $rules );
+	}
+
+	/**
+	 * Get which visual styles and positions are used by the given rules.
+	 *
+	 * Used to inject only the CSS needed for the current page.
+	 *
+	 * @since 5.0.2
+	 * @param array $rules Rule data arrays (from get_rules_for_page).
+	 * @return array{styles: string[], positions: string[]}
+	 */
+	private function get_needed_styles_and_positions( array $rules ) {
+		$styles          = [];
+		$positions       = [];
+		$valid_positions = [
+			'inside_top_left',
+			'inside_top_right',
+			'inside_bottom_left',
+			'inside_bottom_right',
+			'outside_before_left',
+			'outside_before_right',
+			'outside_after_left',
+			'outside_after_right',
+		];
+
+		foreach ( $rules as $rule ) {
+			$style = isset( $rule['visual_style'] ) ? $rule['visual_style'] : 'button';
+			if ( ! in_array( $style, $styles, true ) ) {
+				$styles[] = $style;
+			}
+			$pos = isset( $rule['button_position'] ) ? $rule['button_position'] : 'inside_top_right';
+			if ( in_array( $pos, $valid_positions, true ) && ! in_array( $pos, $positions, true ) ) {
+				$positions[] = $pos;
+			}
+		}
+
+		if ( empty( $positions ) ) {
+			$positions = [ 'inside_top_right' ];
+		}
+
+		return [
+			'styles'    => array_values( $styles ),
+			'positions' => array_values( $positions ),
+		];
+	}
+
+	/**
 	 * Get current page URL
 	 *
 	 * @since 5.0.0
@@ -141,6 +210,59 @@ class Frontend {
 		// Fallback to current URL.
 		global $wp;
 		return home_url( add_query_arg( [], $wp->request ) );
+	}
+
+	/**
+	 * Add admin bar links to edit Global Injector rules that apply on this page.
+	 *
+	 * Shows clipboard icon + "CTC" parent with "Edit: [Rule name]" children for each active rule.
+	 *
+	 * @since 5.0.0
+	 * @param \WP_Admin_Bar $wp_admin_bar Admin bar object.
+	 * @return void
+	 */
+	public function add_admin_bar_links( $wp_admin_bar ) {
+		if ( is_admin() || ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		$rules = $this->get_rules_for_page();
+		if ( empty( $rules ) ) {
+			return;
+		}
+
+		$base_url  = admin_url( 'options-general.php?page=ctc-global-injector' );
+		$parent_id = 'ctc';
+		$title     = __( 'CTC', 'ctc' );
+
+		$wp_admin_bar->add_node(
+			[
+				'id'    => $parent_id,
+				'title' => '<span class="ab-icon dashicons dashicons-clipboard" style="top: 4px;font-size: 18px;"></span><span class="ab-label">' . $title . '</span>',
+				'href'  => $base_url,
+				'meta'  => [
+					'title' => __( 'Copy the Code – edit rules on this page', 'ctc' ),
+				],
+			]
+		);
+
+		foreach ( $rules as $rule ) {
+			$rule_id    = isset( $rule['id'] ) ? (int) $rule['id'] : 0;
+			$rule_title = $rule_id ? get_the_title( $rule_id ) : __( 'Untitled Rule', 'ctc' );
+			$edit_url   = add_query_arg( 'rule', $rule_id, $base_url );
+
+			$wp_admin_bar->add_node(
+				[
+					'parent' => $parent_id,
+					'id'     => $parent_id . '-rule-' . $rule_id,
+					'title'  => sprintf( /* translators: %s: rule name */ __( 'Edit: %s', 'ctc' ), $rule_title ),
+					'href'   => $edit_url,
+					'meta'   => [
+						'title' => sprintf( /* translators: %s: rule name */ __( 'Edit rule "%s" in Global Injector', 'ctc' ), $rule_title ),
+					],
+				]
+			);
+		}
 	}
 
 	/**

@@ -4,11 +4,13 @@
  * Core plugin class.
  *
  * @package CTC
- * @since 5.0.0
+ * @since 5.1.0
  */
 if ( !defined( 'ABSPATH' ) ) {
     exit;
 }
+use CTC\Global_Injector;
+use CTC\Global_Injector\Main_Rule_List;
 /**
  * CTC class.
  *
@@ -20,7 +22,7 @@ final class CTC {
      *
      * @var string
      */
-    public $version = '5.0.1';
+    public $version = '5.1.0';
 
     /**
      * The single instance of the class.
@@ -49,15 +51,10 @@ final class CTC {
      * Instantiate the plugin.
      */
     private function setup() {
-        // Include required files.
         $this->includes();
-        // Register activation hook to deactivate free when pro is activated.
         register_activation_hook( CTC_FILE, [__CLASS__, 'activation'] );
-        // Hook initialization to 'init' to avoid early translation loading issues (WP 6.7+).
         add_action( 'init', [$this, 'init'], 0 );
-        // Load textdomain early on plugins_loaded.
         add_action( 'plugins_loaded', [$this, 'load_textdomain'], 9 );
-        // Plugin action links.
         add_filter( 'plugin_action_links_' . plugin_basename( CTC_FILE ), [$this, 'action_links'] );
     }
 
@@ -66,12 +63,10 @@ final class CTC {
      *
      * Called at 'init' action to ensure translations are available.
      *
-     * @since 5.0.0
+     * @since 5.1.0
      */
     public function init() {
-        // Initialize components.
         $this->initialize();
-        // Loaded action.
         do_action( 'ctc/loaded' );
     }
 
@@ -87,26 +82,18 @@ final class CTC {
      */
     private function initialize() {
         \CTC\Base::get();
-        // Register post types.
         \CTC\Post_Types::get();
-        // Plugin updater.
         \CTC\Updater::get();
-        // Welcome notice for onboarding.
         \CTC\Welcome::get();
-        // Initialize Style Presets CPT.
         \CTC\Global_Injector\Style_Presets::get();
-        // Initialize REST API.
         \CTC\Global_Injector\Rest::get();
         \CTC\Shortcode::get();
-        // Elementor blocks.
         \CTC\Elementor\Blocks::get();
-        // Gutenberg blocks.
         \CTC\Gutenberg\Blocks::get();
         if ( is_admin() ) {
-            // Admin: Global Injector settings page.
-            \CTC\Global_Injector::get();
+            Global_Injector::get();
+            Main_Rule_List::get();
         } else {
-            // Frontend: Global Injector rules rendering.
             \CTC\Global_Injector\Frontend::get();
         }
     }
@@ -126,7 +113,7 @@ final class CTC {
      */
     public function action_links( $links ) {
         $action_links = [
-            'settings' => '<a href="' . admin_url( 'admin.php?page=ctc-global-injector' ) . '">' . esc_html__( 'Settings', 'ctc' ) . '</a>',
+            'settings' => '<a href="' . admin_url( 'options-general.php?page=ctc' ) . '">' . esc_html__( 'Settings', 'ctc' ) . '</a>',
         ];
         return array_merge( $action_links, $links );
     }
@@ -137,7 +124,7 @@ final class CTC {
      * Deactivates the free version if pro version is being activated.
      * This prevents conflicts when both versions are installed.
      *
-     * @since 5.0.0
+     * @since 5.1.0
      */
     public static function activation() {
         // Check if this is the premium version (has /premium/ folder).

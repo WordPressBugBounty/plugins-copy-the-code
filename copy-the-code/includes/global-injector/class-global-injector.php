@@ -3,7 +3,7 @@
  * Global Injector
  *
  * @package CTC
- * @since 5.0.0
+ * @since 5.1.0
  */
 
 namespace CTC;
@@ -17,14 +17,14 @@ use CTC\Global_Injector\Display_Conditions;
 /**
  * Global Injector
  *
- * @since 5.0.0
+ * @since 5.1.0
  */
 class Global_Injector {
 
 	/**
 	 * Instance
 	 *
-	 * @since 5.0.0
+	 * @since 5.1.0
 	 *
 	 * @access private
 	 * @var object Class object.
@@ -34,7 +34,7 @@ class Global_Injector {
 	/**
 	 * Initiator
 	 *
-	 * @since 5.0.0
+	 * @since 5.1.0
 	 *
 	 * @return object initialized object of class.
 	 */
@@ -48,32 +48,16 @@ class Global_Injector {
 	/**
 	 * Constructor
 	 *
-	 * @since 5.0.0
+	 * @since 5.1.0
 	 */
 	public function __construct() {
-		add_action( 'admin_menu', [ $this, 'add_menu' ] );
-	}
-
-	/**
-	 * Add menu
-	 *
-	 * @since 5.0.0
-	 */
-	public function add_menu() {
-		add_submenu_page(
-			'options-general.php',
-			'Global Injector',
-			'↳ Global Injector',
-			'manage_options',
-			'ctc-global-injector',
-			[ $this, 'render' ]
-		);
+		// Menus are registered under Settings in \CTC\Base::register_menus().
 	}
 
 	/**
 	 * Render Global Injector page
 	 *
-	 * @since 5.0.0
+	 * @since 5.1.0
 	 * @return void
 	 */
 	public function render() {
@@ -84,16 +68,14 @@ class Global_Injector {
 		$this->enqueue_assets();
 		$this->localize_data();
 		?>
-		<div class="wrap ctc-global-injector-page">
-			<div id="ctc-global-injector-root"></div>
-		</div>
+		<div class="wrap ctc-admin-root ctc-global-injector-page" id="ctc-global-injector-root"></div>
 		<?php
 	}
 
 	/**
 	 * Enqueue assets (scripts and styles)
 	 *
-	 * @since 5.0.0
+	 * @since 5.1.0
 	 * @return void
 	 */
 	private function enqueue_assets() {
@@ -123,13 +105,15 @@ class Global_Injector {
 	/**
 	 * Localize data for React app
 	 *
-	 * @since 5.0.0
+	 * @since 5.1.0
 	 * @return void
 	 */
 	private function localize_data() {
 		$rules           = $this->load_rules();
 		$presets         = Global_Injector\Style_Presets::load_all_presets();
 		$default_presets = Global_Injector\Style_Presets::get_default_presets();
+
+		$selected_rule_id = $this->get_selected_rule_id( $rules );
 
 		wp_localize_script(
 			'ctc-global-injector',
@@ -138,7 +122,7 @@ class Global_Injector {
 				'version'           => CTC_VER,
 				'isPro'             => Helper::is_pro(),
 				'rules'             => $rules,
-				'selectedRuleId'    => ! empty( $rules ) ? $rules[0]['id'] : null,
+				'selectedRuleId'    => $selected_rule_id,
 				'apiUrl'            => rest_url( 'ctc/v1/' ),
 				'nonce'             => wp_create_nonce( 'wp_rest' ),
 				'presets'           => $presets,
@@ -165,14 +149,48 @@ class Global_Injector {
 				],
 				// Display Conditions.
 				'displayConditions' => Display_Conditions::get_localize_data(),
+				'urls'              => [
+					'rules' => admin_url( 'options-general.php?page=ctc-rules' ),
+				],
 			]
 		);
 	}
 
 	/**
+	 * Get rules for admin list views.
+	 *
+	 * @since 5.1.0
+	 * @return array
+	 */
+	public function get_admin_rules() {
+		return $this->load_rules();
+	}
+
+	/**
+	 * Get the selected rule ID for the editor (default first rule, or from ?rule= if valid).
+	 *
+	 * @since 5.1.0
+	 * @param array $rules Rules array (each item has 'id' key).
+	 * @return int|null Selected rule ID, or null if no rules.
+	 */
+	private function get_selected_rule_id( $rules ) {
+		$selected = ! empty( $rules ) ? $rules[0]['id'] : null;
+		if ( ! empty( $_GET['rule'] ) && is_numeric( $_GET['rule'] ) ) {
+			$requested_id = (int) $_GET['rule'];
+			foreach ( $rules as $rule ) {
+				if ( isset( $rule['id'] ) && (int) $rule['id'] === $requested_id ) {
+					$selected = $requested_id;
+					break;
+				}
+			}
+		}
+		return $selected;
+	}
+
+	/**
 	 * Load rules from database
 	 *
-	 * @since 5.0.0
+	 * @since 5.1.0
 	 * @return array
 	 */
 	private function load_rules() {
@@ -311,7 +329,7 @@ class Global_Injector {
 			 *
 			 * Pro add-on can use this to add additional fields like custom_css_class.
 			 *
-			 * @since 5.0.0
+			 * @since 5.1.0
 			 * @param array    $rule Rule data array.
 			 * @param \WP_Post $post Post object.
 			 */

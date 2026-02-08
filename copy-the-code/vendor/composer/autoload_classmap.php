@@ -8,6 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'CTC' => $baseDir . '/includes/class-core.php',
     'CTC\\Base' => $baseDir . '/includes/class-base.php',
+    'CTC\\Dashboard' => $baseDir . '/includes/class-dashboard.php',
     'CTC\\Elementor\\Block\\AI\\Prompt\\Generator' => $baseDir . '/includes/elementor/widgets/ai-prompt-generator/widget.php',
     'CTC\\Elementor\\Block\\Blockquote' => $baseDir . '/includes/elementor/widgets/blockquote/widget.php',
     'CTC\\Elementor\\Block\\CodeSnippet' => $baseDir . '/includes/elementor/widgets/code-snippet/widget.php',
@@ -28,6 +29,8 @@ return array(
     'CTC\\Global_Injector' => $baseDir . '/includes/global-injector/class-global-injector.php',
     'CTC\\Global_Injector\\Display_Conditions' => $baseDir . '/includes/global-injector/class-display-conditions.php',
     'CTC\\Global_Injector\\Frontend' => $baseDir . '/includes/global-injector/class-frontend.php',
+    'CTC\\Global_Injector\\Inline_CSS' => $baseDir . '/includes/global-injector/class-inline-css.php',
+    'CTC\\Global_Injector\\Main_Rule_List' => $baseDir . '/includes/global-injector/class-main-rule-list.php',
     'CTC\\Global_Injector\\Rest' => $baseDir . '/includes/global-injector/class-rest.php',
     'CTC\\Global_Injector\\Style_Presets' => $baseDir . '/includes/global-injector/class-style-presets.php',
     'CTC\\Global_Injector\\Styles\\Button' => $baseDir . '/includes/global-injector/styles/class-button.php',

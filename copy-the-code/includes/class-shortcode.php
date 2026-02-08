@@ -39,6 +39,13 @@ class Shortcode {
 	private $styles_enqueued = false;
 
 	/**
+	 * Track which presets were used on the page (for conditional CSS).
+	 *
+	 * @var array<string, true>
+	 */
+	private $used_presets = [];
+
+	/**
 	 * Get instance.
 	 *
 	 * @return Shortcode
@@ -99,13 +106,16 @@ class Shortcode {
 			'class'         => '',          // Additional CSS class.
 			'id'            => '',          // Custom ID.
 
+			// Redirect: URL to open after copy (e.g. store page).
+			'redirect'      => '',          // Preferred: URL to open after copying.
+			'link'          => '',          // Backward compatibility: same as redirect.
+
 			// Legacy attributes (backward compatibility).
 			'copied-text'   => '',          // Maps to success-text.
 			'style'         => '',          // Maps to preset.
 			'tag'           => '',          // Legacy: HTML tag.
 			'title'         => '',          // Legacy: Tooltip.
 			'content'       => '',          // Legacy: Content to copy.
-			'link'          => '',          // Legacy: Link URL.
 			'hidden'        => '',          // Legacy: Hide display text.
 		];
 	}
@@ -136,8 +146,12 @@ class Shortcode {
 		// Mark that we need to enqueue assets.
 		$this->styles_enqueued = true;
 
+		// Track preset for conditional CSS (only load styles for presets used).
+		$preset                        = $atts['preset'] ?? 'inline';
+		$this->used_presets[ $preset ] = true;
+
 		// Render based on preset.
-		switch ( $atts['preset'] ) {
+		switch ( $preset ) {
 			case 'button':
 				return $this->render_button_preset( $atts );
 
@@ -199,11 +213,9 @@ class Shortcode {
 
 			$atts['text']    = $copy_text;
 			$atts['display'] = $display_text;
-		} else {
+		} elseif ( empty( $atts['text'] ) && ! empty( $content ) ) {
 			// Modern mode: text = both copy and display (unless display is set).
-			if ( empty( $atts['text'] ) && ! empty( $content ) ) {
-				$atts['text'] = $content;
-			}
+			$atts['text'] = $content;
 		}
 
 		// Decode HTML entities in text (supports &#91; for [ and &#93; for ] etc.).
@@ -214,11 +226,13 @@ class Shortcode {
 			$atts['text'] = $this->fix_var_texturize( $atts['text'] );
 		}
 
-		// Display text defaults to copy text.
-		if ( empty( $atts['display'] ) ) {
+		// Display text: prefer inner content when present, else default to copy text.
+		$content_trimmed = isset( $content ) ? trim( (string) $content ) : '';
+		if ( ! empty( $content_trimmed ) && empty( $atts['display'] ) ) {
+			$atts['display'] = html_entity_decode( $content_trimmed, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+		} elseif ( empty( $atts['display'] ) ) {
 			$atts['display'] = $atts['text'];
 		} else {
-			// Decode HTML entities in display text as well.
 			$atts['display'] = html_entity_decode( $atts['display'], ENT_QUOTES | ENT_HTML5, 'UTF-8' );
 		}
 
@@ -255,6 +269,11 @@ class Shortcode {
 			$atts['button-text'] = __( 'Copy', 'ctc' );
 		}
 
+		// Redirect URL: prefer redirect attribute; fall back to link for backward compatibility.
+		if ( ! empty( $atts['redirect'] ) ) {
+			$atts['link'] = $atts['redirect'];
+		}
+
 		return $atts;
 	}
 
@@ -280,7 +299,7 @@ class Shortcode {
 		// Replace en-dash/em-dash with hyphens only inside var().
 		return preg_replace_callback(
 			'/var\s*\(([^)]+)\)/',
-			function( $matches ) {
+			function ( $matches ) {
 				$inside = str_replace(
 					[ '–', '—' ],    // En-dash, Em-dash (Unicode).
 					[ '--', '---' ], // Double, Triple hyphen.
@@ -318,7 +337,8 @@ class Shortcode {
 		// Build CSS class based on tag type.
 		if ( $use_native_tag ) {
 			// Native mode: Use theme's anchor styling, minimal CTC styling.
-			$css_class = 'ctc-shortcode ctc-shortcode--native' . $custom_class;
+			$this->used_presets['native'] = true;
+			$css_class                    = 'ctc-shortcode ctc-shortcode--native' . $custom_class;
 		} else {
 			// Modern mode: Full CTC styling.
 			$css_class = 'ctc-shortcode ctc-shortcode--inline' . $custom_class;
@@ -445,6 +465,9 @@ class Shortcode {
 			data-ctc-format="<?php echo esc_attr( $atts['copy-as'] ); ?>"
 			<?php if ( ! empty( $atts['target'] ) ) : ?>
 				data-ctc-target="<?php echo esc_attr( $atts['target'] ); ?>"
+			<?php endif; ?>
+			<?php if ( ! empty( $atts['link'] ) ) : ?>
+				data-ctc-link="<?php echo esc_attr( $atts['link'] ); ?>"
 			<?php endif; ?>
 			aria-label="<?php echo esc_attr( $atts['tooltip'] ); ?>"
 		>
@@ -682,81 +705,68 @@ class Shortcode {
 			true
 		);
 
-		// Enqueue inline CSS.
+		// Enqueue inline CSS (only for presets used on the page, minified).
 		wp_register_style( 'ctc-shortcode', false, [], CTC_VER );
 		wp_enqueue_style( 'ctc-shortcode' );
 		wp_add_inline_style( 'ctc-shortcode', $this->get_inline_css() );
 	}
 
 	/**
-	 * Get inline CSS for shortcode styles.
+	 * Minify CSS: strip comments and collapse whitespace.
 	 *
-	 * Reuses CSS variable patterns from Global Injector.
+	 * @param string $css Raw CSS.
+	 * @return string Minified CSS.
+	 */
+	private function minify_css( $css ) {
+		$css = (string) preg_replace( '/\/\*[\s\S]*?\*\//', '', $css );
+		$css = (string) preg_replace( '/\s+/', ' ', $css );
+		return trim( $css );
+	}
+
+	/**
+	 * Get inline CSS for shortcode styles.
+	 * Builds from base + only the preset chunks that were used, then minifies.
 	 *
 	 * @return string CSS styles.
 	 */
 	private function get_inline_css() {
-		return '
-/* CTC Shortcode Base Styles */
-.ctc-shortcode {
-	/* 
-	 * Inline preset inherits theme colors by default.
-	 * Users can override via shortcode attributes: color="#hex"
-	 * Or via CSS: .ctc-shortcode { --ctc-inline-color: #yourcolor; }
+		$parts     = [ $this->get_css_base() ];
+		$presets   = array_keys( $this->used_presets );
+		$chunk_map = [
+			'inline' => 'get_css_inline',
+			'native' => 'get_css_native',
+			'button' => 'get_css_button',
+			'icon'   => 'get_css_icon',
+			'cover'  => 'get_css_cover',
+		];
+		foreach ( $presets as $preset ) {
+			if ( isset( $chunk_map[ $preset ] ) ) {
+				$parts[] = $this->{$chunk_map[ $preset ]}();
+			}
+		}
+		return $this->minify_css( implode( "\n", $parts ) );
+	}
+
+	/**
+	 * Base + shared CSS (vars, icon, success, table, keyframes). Always included when shortcode is used.
+	 *
+	 * @return string
 	 */
+	private function get_css_base() {
+		return '
+.ctc-shortcode {
 	--ctc-inline-color: currentColor;
 	--ctc-inline-hover-color: currentColor;
 }
-
-/* Inline Preset - Inherits theme colors for seamless integration */
-.ctc-shortcode--inline {
-	display: inline-flex;
-	align-items: center;
-	gap: 4px;
-	cursor: pointer;
-	color: var(--ctc-inline-color);
-	transition: opacity 0.15s ease;
-}
-
-.ctc-shortcode--inline:hover {
-	opacity: 0.8;
-}
-
-.ctc-shortcode--inline:focus {
-	outline: 2px solid currentColor;
-	outline-offset: 2px;
-}
-
-/* Native Preset - Uses theme anchor styling (tag="a") */
-.ctc-shortcode--native {
-	display: inline-flex;
-	align-items: center;
-	gap: 4px;
-	cursor: pointer;
-	/* No color overrides - inherits theme anchor styling */
-}
-
-.ctc-shortcode--native .ctc-shortcode__icon {
-	opacity: 0.7;
-	transition: opacity 0.15s ease;
-}
-
-.ctc-shortcode--native:hover .ctc-shortcode__icon {
-	opacity: 1;
-}
-
 .ctc-shortcode__icon {
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 }
-
 .ctc-shortcode__icon svg {
 	width: 14px;
 	height: 14px;
 }
-
-/* Prevent giant icons when shortcode is inside tables (table cells may inherit large font-size). */
 table .ctc-shortcode__icon,
 table .ctc-shortcode__icon svg,
 table .ctc-cover-icon,
@@ -775,17 +785,78 @@ table .ctc-cover-icon svg {
 	max-width: 12px !important;
 	max-height: 12px !important;
 }
-
 .ctc-shortcode__success {
 	position: absolute;
 	pointer-events: none;
 }
+.ctc-shortcode--copied {
+	animation: ctc-shortcode-pulse 0.3s ease;
+}
+@keyframes ctc-shortcode-pulse {
+	0%, 100% { transform: scale(1); }
+	50% { transform: scale(1.05); }
+}
+';
+	}
 
+	/**
+	 * Inline preset CSS.
+	 *
+	 * @return string
+	 */
+	private function get_css_inline() {
+		return '
+.ctc-shortcode--inline {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	cursor: pointer;
+	color: var(--ctc-inline-color);
+	transition: opacity 0.15s ease;
+}
+.ctc-shortcode--inline:hover {
+	opacity: 0.8;
+}
+.ctc-shortcode--inline:focus {
+	outline: 2px solid currentColor;
+	outline-offset: 2px;
+}
 .ctc-shortcode--inline .ctc-inline-hidden {
 	display: none;
 }
+';
+	}
 
-/* Button Preset - uses same CSS vars as Global Injector Button style */
+	/**
+	 * Native preset CSS.
+	 *
+	 * @return string
+	 */
+	private function get_css_native() {
+		return '
+.ctc-shortcode--native {
+	display: inline-flex;
+	align-items: center;
+	gap: 4px;
+	cursor: pointer;
+}
+.ctc-shortcode--native .ctc-shortcode__icon {
+	opacity: 0.7;
+	transition: opacity 0.15s ease;
+}
+.ctc-shortcode--native:hover .ctc-shortcode__icon {
+	opacity: 1;
+}
+';
+	}
+
+	/**
+	 * Button preset CSS.
+	 *
+	 * @return string
+	 */
+	private function get_css_button() {
+		return '
 .ctc-shortcode--button {
 	display: inline-flex;
 	align-items: center;
@@ -802,26 +873,30 @@ table .ctc-cover-icon svg {
 	padding: var(--ctc-padding-y, 8px) var(--ctc-padding-x, 16px);
 	border-radius: var(--ctc-border-radius, 6px);
 }
-
 .ctc-shortcode--button:hover {
 	background: var(--ctc-hover-bg, #4338ca);
 }
-
 .ctc-shortcode--button:focus {
 	outline: 2px solid var(--ctc-bg, #4f46e5);
 	outline-offset: 2px;
 }
-
 .ctc-shortcode--button:active {
 	transform: scale(0.97);
 }
-
 .ctc-shortcode--button .ctc-shortcode__icon svg {
 	width: 14px;
 	height: 14px;
 }
+';
+	}
 
-/* Icon Preset - Neutral gray, darkens on hover for theme compatibility */
+	/**
+	 * Icon preset CSS.
+	 *
+	 * @return string
+	 */
+	private function get_css_icon() {
+		return '
 .ctc-shortcode--icon {
 	display: inline-flex;
 	align-items: center;
@@ -836,33 +911,36 @@ table .ctc-cover-icon svg {
 	padding: var(--ctc-icon-padding, 6px);
 	border-radius: var(--ctc-icon-radius, 6px);
 }
-
 .ctc-shortcode--icon:hover {
 	color: var(--ctc-icon-hover-color, #374151);
 	border-color: var(--ctc-icon-hover-border, #9ca3af);
 	background: var(--ctc-icon-hover-bg, #f3f4f6);
 }
-
 .ctc-shortcode--icon:focus {
 	outline: 2px solid var(--ctc-icon-border, #d1d5db);
 	outline-offset: 2px;
 }
-
 .ctc-shortcode--icon .ctc-shortcode__icon svg {
 	width: var(--ctc-icon-size, 16px);
 	height: var(--ctc-icon-size, 16px);
 }
+';
+	}
 
-/* Cover Preset - uses same CSS as Global Injector Cover style */
+	/**
+	 * Cover preset CSS.
+	 *
+	 * @return string
+	 */
+	private function get_css_cover() {
+		return '
 .ctc-shortcode--cover {
 	position: relative;
 	display: block;
 }
-
 .ctc-shortcode--cover .ctc-shortcode__content {
 	display: block;
 }
-
 .ctc-shortcode--cover .ctc-cover-overlay {
 	position: absolute;
 	inset: 0;
@@ -876,14 +954,12 @@ table .ctc-cover-icon svg {
 	align-items: center;
 	justify-content: center;
 }
-
 .ctc-shortcode--cover:hover .ctc-cover-overlay {
 	opacity: 1;
 	background: rgba(79, 70, 229, 0.3);
 	backdrop-filter: blur(2px);
 	-webkit-backdrop-filter: blur(2px);
 }
-
 .ctc-shortcode--cover .ctc-cover-button {
 	transform: scale(0.9);
 	opacity: 0;
@@ -902,30 +978,17 @@ table .ctc-cover-icon svg {
 	white-space: nowrap;
 	cursor: pointer;
 }
-
 .ctc-shortcode--cover:hover .ctc-cover-button {
 	opacity: 1;
 	transform: scale(1);
 }
-
 .ctc-shortcode--cover .ctc-cover-button:hover {
 	background: #f1f5f9;
 	transform: scale(1.05);
 }
-
 .ctc-shortcode--cover .ctc-cover-icon svg {
 	width: 12px;
 	height: 12px;
-}
-
-/* Success States */
-.ctc-shortcode--copied {
-	animation: ctc-shortcode-pulse 0.3s ease;
-}
-
-@keyframes ctc-shortcode-pulse {
-	0%, 100% { transform: scale(1); }
-	50% { transform: scale(1.05); }
 }
 ';
 	}
