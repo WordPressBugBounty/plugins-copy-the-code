@@ -118,41 +118,44 @@ class Global_Injector {
 		wp_localize_script(
 			'ctc-global-injector',
 			'GlobalInjectorVars',
-			[
-				'version'           => CTC_VER,
-				'isPro'             => Helper::is_pro(),
-				'rules'             => $rules,
-				'selectedRuleId'    => $selected_rule_id,
-				'apiUrl'            => rest_url( 'ctc/v1/' ),
-				'nonce'             => wp_create_nonce( 'wp_rest' ),
-				'presets'           => $presets,
-				'defaultPresets'    => $default_presets,
-				'presetLimits'      => [
-					'button' => [
-						'count' => Global_Injector\Style_Presets::get_preset_count_by_style( 'button' ),
-						'max'   => Global_Injector\Style_Presets::MAX_FREE_PRESETS_PER_STYLE,
+			apply_filters(
+				'ctc/global_injector/localize_data',
+				[
+					'version'           => CTC_VER,
+					'isPro'             => Helper::is_pro(),
+					'rules'             => $rules,
+					'selectedRuleId'    => $selected_rule_id,
+					'apiUrl'            => rest_url( 'ctc/v1/' ),
+					'nonce'             => wp_create_nonce( 'wp_rest' ),
+					'presets'           => $presets,
+					'defaultPresets'    => $default_presets,
+					'presetLimits'      => [
+						'button' => [
+							'count' => Global_Injector\Style_Presets::get_preset_count_by_style( 'button' ),
+							'max'   => Global_Injector\Style_Presets::MAX_FREE_PRESETS_PER_STYLE,
+						],
+						'icon'   => [
+							'count' => Global_Injector\Style_Presets::get_preset_count_by_style( 'icon' ),
+							'max'   => Global_Injector\Style_Presets::MAX_FREE_PRESETS_PER_STYLE,
+						],
+						'cover'  => [
+							'count' => Global_Injector\Style_Presets::get_preset_count_by_style( 'cover' ),
+							'max'   => Global_Injector\Style_Presets::MAX_FREE_PRESETS_PER_STYLE,
+						],
 					],
-					'icon'   => [
-						'count' => Global_Injector\Style_Presets::get_preset_count_by_style( 'icon' ),
-						'max'   => Global_Injector\Style_Presets::MAX_FREE_PRESETS_PER_STYLE,
+					// Visual Style Configurations (single source of truth).
+					'styles'            => [
+						'button' => ButtonStyle::get_localize_data(),
+						'icon'   => IconStyle::get_localize_data(),
+						'cover'  => CoverStyle::get_localize_data(),
 					],
-					'cover'  => [
-						'count' => Global_Injector\Style_Presets::get_preset_count_by_style( 'cover' ),
-						'max'   => Global_Injector\Style_Presets::MAX_FREE_PRESETS_PER_STYLE,
+					// Display Conditions.
+					'displayConditions' => Display_Conditions::get_localize_data(),
+					'urls'              => [
+						'rules' => admin_url( 'options-general.php?page=ctc-rules' ),
 					],
-				],
-				// Visual Style Configurations (single source of truth).
-				'styles'            => [
-					'button' => ButtonStyle::get_localize_data(),
-					'icon'   => IconStyle::get_localize_data(),
-					'cover'  => CoverStyle::get_localize_data(),
-				],
-				// Display Conditions.
-				'displayConditions' => Display_Conditions::get_localize_data(),
-				'urls'              => [
-					'rules' => admin_url( 'options-general.php?page=ctc-rules' ),
-				],
-			]
+				]
+			),
 		);
 	}
 
@@ -215,6 +218,7 @@ class Global_Injector {
 			$reveal_text        = get_post_meta( $post->ID, 'reveal-text', true );
 			$button_title       = get_post_meta( $post->ID, 'button-title', true );
 			$copy_format        = get_post_meta( $post->ID, 'copy-format', true );
+			$copy_as            = get_post_meta( $post->ID, 'copy-as', true );
 			$selector           = get_post_meta( $post->ID, 'selector', true );
 			$exclude_selector   = get_post_meta( $post->ID, 'exclude_selector', true );
 			$style_type         = get_post_meta( $post->ID, 'style', true );
@@ -291,6 +295,7 @@ class Global_Injector {
 				'display_conditions'   => ! empty( $display_conditions ) ? $display_conditions : [],
 				'button_title'         => ! empty( $button_title ) ? $button_title : '',
 				'copy_format'          => ! empty( $copy_format ) ? $copy_format : '',
+				'copy_as'              => ! empty( $copy_as ) ? $copy_as : '',
 				// Icon settings.
 				'icon_enabled'         => $icon_enabled,
 				'icon_position'        => ! empty( $icon_position ) ? $icon_position : 'left',

@@ -81,7 +81,8 @@ class Shortcode {
 			'text'          => '',          // Content to copy (or use content between tags).
 			'display'       => '',          // What to display (default: same as text).
 			'target'        => '',          // CSS selector to copy from (advanced).
-			'copy-as'       => 'text',      // 'text' or 'html'.
+			'copy-as'       => 'text',      // 'text' or 'html' (legacy).
+			'copy_as'       => '',          // Copy as: text, html, text_and_html, image, json, svg.
 
 			// Preset/Style.
 			'preset'        => 'inline',    // 'button', 'icon', 'inline', 'cover'.
@@ -353,6 +354,9 @@ class Shortcode {
 		// Determine HTML tag.
 		$tag = $use_native_tag ? 'a' : 'span';
 
+		// Copy as: prefer copy_as.
+		$copy_as_value = ! empty( $atts['copy_as'] ) ? $atts['copy_as'] : '';
+
 		// Build icon HTML.
 		$icon_html = '';
 		if ( $show_icon ) {
@@ -370,6 +374,9 @@ class Shortcode {
 			data-ctc-copy="<?php echo esc_attr( $atts['text'] ); ?>"
 			data-ctc-success="<?php echo esc_attr( $atts['success-text'] ); ?>"
 			data-ctc-format="<?php echo esc_attr( $atts['copy-as'] ); ?>"
+			<?php if ( ! empty( $copy_as_value ) ) : ?>
+				data-ctc-copy-as="<?php echo esc_attr( $copy_as_value ); ?>"
+			<?php endif; ?>
 			<?php if ( ! empty( $atts['target'] ) ) : ?>
 				data-ctc-target="<?php echo esc_attr( $atts['target'] ); ?>"
 			<?php endif; ?>
@@ -452,6 +459,9 @@ class Shortcode {
 			$button_content .= $icon_svg;
 		}
 
+		// Copy as: prefer copy_as.
+		$copy_as_value = ! empty( $atts['copy_as'] ) ? $atts['copy_as'] : '';
+
 		ob_start();
 		?>
 		<button
@@ -463,6 +473,9 @@ class Shortcode {
 			data-ctc-success="<?php echo esc_attr( $config['text']['success_text'] ); ?>"
 			data-ctc-original="<?php echo esc_attr( $config['text']['button_text'] ); ?>"
 			data-ctc-format="<?php echo esc_attr( $atts['copy-as'] ); ?>"
+			<?php if ( ! empty( $copy_as_value ) ) : ?>
+				data-ctc-copy-as="<?php echo esc_attr( $copy_as_value ); ?>"
+			<?php endif; ?>
 			<?php if ( ! empty( $atts['target'] ) ) : ?>
 				data-ctc-target="<?php echo esc_attr( $atts['target'] ); ?>"
 			<?php endif; ?>
@@ -518,6 +531,9 @@ class Shortcode {
 		// Get icon SVG.
 		$icon_svg = '<span class="ctc-shortcode__icon">' . Icon::get_icon_svg( $config['icon']['icon_key'] ) . '</span>';
 
+		// Copy as: prefer copy_as.
+		$copy_as_value = ! empty( $atts['copy_as'] ) ? $atts['copy_as'] : '';
+
 		ob_start();
 		?>
 		<button
@@ -529,6 +545,9 @@ class Shortcode {
 			data-ctc-success="<?php echo esc_attr( $config['text']['success_text'] ); ?>"
 			data-ctc-tooltip="<?php echo esc_attr( $config['text']['tooltip_text'] ); ?>"
 			data-ctc-format="<?php echo esc_attr( $atts['copy-as'] ); ?>"
+			<?php if ( ! empty( $copy_as_value ) ) : ?>
+				data-ctc-copy-as="<?php echo esc_attr( $copy_as_value ); ?>"
+			<?php endif; ?>
 			<?php if ( ! empty( $atts['target'] ) ) : ?>
 				data-ctc-target="<?php echo esc_attr( $atts['target'] ); ?>"
 			<?php endif; ?>

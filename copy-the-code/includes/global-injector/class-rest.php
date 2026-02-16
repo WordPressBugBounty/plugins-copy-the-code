@@ -222,6 +222,7 @@ class Rest {
 			'button_position'      => 'button-position',
 			'button_title'         => 'button-title',
 			'copy_format'          => 'copy-format',
+			'copy_as'              => 'copy-as',
 			'is_active'            => 'is_active',
 			'display_conditions'   => 'display_conditions',
 			// Icon settings.
@@ -275,6 +276,15 @@ class Rest {
 		$color_fields = [ 'text_color', 'bg_color', 'icon_color', 'icon_hover_color', 'border_color', 'overlay_color', 'hover_overlay_color', 'cover_text_color', 'cover_bg_color', 'cover_hover_bg_color' ];
 
 		/**
+		 * Filter enum fields for sanitization (data_key => allowed values).
+		 * Pro can add fields like image_format => ['png','jpeg','webp'].
+		 *
+		 * @since 5.1.0
+		 * @param array $enum_fields Array of data_key => allowed values.
+		 */
+		$enum_fields = apply_filters( 'ctc/global_injector/rule_enum_fields', [] );
+
+		/**
 		 * Filter the text fields for sanitization.
 		 *
 		 * Pro can add custom text fields here if needed.
@@ -292,6 +302,9 @@ class Rest {
 				} elseif ( 'is_active' === $data_key ) {
 					// Save as string '1' or '0' to avoid WordPress empty string issue.
 					$value = $value ? '1' : '0';
+				} elseif ( isset( $enum_fields[ $data_key ] ) && is_array( $enum_fields[ $data_key ] ) ) {
+					$allowed = $enum_fields[ $data_key ];
+					$value   = in_array( $value, $allowed, true ) ? $value : ( $allowed[0] ?? '' );
 				} elseif ( in_array( $data_key, $boolean_fields, true ) ) {
 					// Save as string '1' or '0' for boolean fields.
 					$value = $value ? '1' : '0';
@@ -433,7 +446,7 @@ class Rest {
 		$icon_enabled_raw = get_post_meta( $id, 'icon_enabled', true );
 		$icon_enabled     = '' === $icon_enabled_raw ? true : '1' === $icon_enabled_raw;
 
-		return [
+		$rule = [
 			'id'                   => $post->ID,
 			'title'                => isset( $post->post_title ) ? $post->post_title : __( 'Untitled Rule', 'ctc' ),
 			'selector'             => $get_meta( 'selector', 'pre' ),
@@ -449,6 +462,7 @@ class Rest {
 			'display_conditions'   => $get_meta( 'display_conditions', [] ),
 			'button_title'         => $get_meta( 'button-title', '' ),
 			'copy_format'          => $get_meta( 'copy-format', '' ),
+			'copy_as'              => $get_meta( 'copy-as', '' ),
 			// Icon settings.
 			'icon_enabled'         => $icon_enabled,
 			'icon_position'        => $get_meta( 'icon_position', 'left' ),
@@ -481,6 +495,16 @@ class Rest {
 			'cover_padding_x'      => (int) $get_meta( 'cover_padding_x', 12 ),
 			'cover_padding_y'      => (int) $get_meta( 'cover_padding_y', 6 ),
 		];
+
+		/**
+		 * Filter REST rule data before returning.
+		 * Pro can add fields like image_format.
+		 *
+		 * @since 5.1.0
+		 * @param array $rule Rule data array.
+		 * @param int   $id   Rule ID.
+		 */
+		return apply_filters( 'ctc/global_injector/rest_rule_data', $rule, $id );
 	}
 
 	// =========================================================================

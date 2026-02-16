@@ -126,6 +126,7 @@ class Frontend {
 			'postType'    => get_post_type() ? get_post_type() : null,
 			'pageUrl'     => $this->get_current_page_url(),
 			'pageContext' => Display_Conditions::get_page_context(),
+			'debug'       => (bool) apply_filters( 'ctc/global_injector/debug', defined( 'WP_DEBUG' ) && WP_DEBUG ),
 			'styles'      => [
 				'button' => ButtonStyle::get_localize_data(),
 				'icon'   => IconStyle::get_localize_data(),
@@ -359,6 +360,7 @@ class Frontend {
 			'tooltip_text'     => $this->get_meta_with_default( $post->ID, 'tooltip-text', __( 'Copy to clipboard', 'ctc' ) ),
 			'button_position'  => $this->migrate_position( $this->get_meta_with_default( $post->ID, 'button-position', 'inside_top_right' ) ),
 			'copy_format'      => $this->get_meta_with_default( $post->ID, 'copy-format', 'text' ),
+			'copy_as'          => $this->get_copy_as_for_rule( $post->ID ),
 			'icon_enabled'     => $this->get_bool_meta( $post->ID, 'icon_enabled', true ),
 			'icon_position'    => $this->get_meta_with_default( $post->ID, 'icon_position', 'left' ),
 			'icon_key'         => $this->get_meta_with_default( $post->ID, 'icon_key', 'clipboard' ),
@@ -459,6 +461,30 @@ class Frontend {
 
 		// Default fallback.
 		return 'inside_top_right';
+	}
+
+	/**
+	 * Get clipboard as for a rule (for Copy as: text, html, image, etc.).
+	 * Uses copy-as meta when set; otherwise derives from legacy copy-format.
+	 *
+	 * @since 5.0.0
+	 * @param int $post_id Post ID.
+	 * @return string One of: text, html, text_and_html, image, json, svg.
+	 */
+	private function get_copy_as_for_rule( $post_id ) {
+		$copy_as = get_post_meta( $post_id, 'copy-as', true );
+		$valid_types    = [ 'text', 'html', 'text_and_html', 'image', 'json', 'svg' ];
+		if ( ! empty( $copy_as ) && in_array( $copy_as, $valid_types, true ) ) {
+			return $copy_as;
+		}
+		$copy_format = get_post_meta( $post_id, 'copy-format', true );
+		if ( 'html' === $copy_format || 'innerHTML' === $copy_format ) {
+			return 'html';
+		}
+		if ( 'text' === $copy_format ) {
+			return 'text';
+		}
+		return 'text_and_html';
 	}
 
 	/**

@@ -140,7 +140,7 @@ class Welcome {
 
 		// Upgrade message.
 		return [
-			'title'   => __( 'Welcome to Copy Anything to Clipboard v5.0.0!', 'ctc' ),
+			'title'   => __( 'Welcome to Copy Anything to Clipboard!', 'ctc' ),
 			'message' => __( 'This major update introduces the powerful Global Injector with visual style presets, display conditions, and live preview. Your existing settings have been preserved.', 'ctc' ),
 			'type'    => 'upgrade',
 		];

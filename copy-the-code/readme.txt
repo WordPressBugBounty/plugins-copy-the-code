@@ -3,12 +3,12 @@ Contributors: clipboardagency, freemius
 Donate link: https://www.paypal.me/mwaghmare7/
 Tags: clipboard, copy, copy-to-clipboard, copy-button, copy-code
 Tested up to: 6.9
-Stable tag: 5.1.0
+Stable tag: 5.2.0
 Requires PHP: 5.6
 Requires at least: 4.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
-Copy Anything to Clipboard is the #1 WordPress plugin with **3012,899+** downloads 🚀
+Copy Anything to Clipboard is the #1 WordPress plugin with **317,488+** downloads 🚀
 
 == Description ==
 
@@ -17,18 +17,19 @@ Copy Anything to Clipboard is the #1 WordPress plugin with **3012,899+** downloa
 This powerful copy to clipboard plugin offers three flexible methods: automatic CSS selector targeting, shortcode integration, and Elementor/Gutenberg widgets. Add copy buttons to code blocks, blockquotes, coupon codes, deals, contact information, and more with just a few clicks.
 
 **Key Features:**
-* **NEW: Global Injector** - Advanced copy button injection with display conditions
-* One-click copy to clipboard functionality
-* Automatic copy button for any CSS selector (pre, blockquote, code, etc.)
-* Refined shortcode support: `[copy]` and `[copy_inline]` with advanced attributes
-* Elementor widgets for 25+ content types
-* Gutenberg blocks for modern WordPress sites
-* Display conditions - Load assets only on specific pages
-* Mobile-friendly and cross-browser compatible
-* Lightweight and SEO-friendly
-* Customizable button styles (Button, Icon, Cover) and positions
-* Copy as HTML or plain text
-* Works with all WordPress themes and plugins
+
+- **NEW: Global Injector** - Advanced copy button injection with display conditions
+- One-click copy to clipboard functionality
+- Automatic copy button for any CSS selector (pre, blockquote, code, etc.)
+- Refined shortcode support: `[copy]` and `[copy_inline]` with advanced attributes
+- Elementor widgets for 25+ content types
+- Gutenberg blocks for modern WordPress sites
+- Display conditions - Load assets only on specific pages
+- Mobile-friendly and cross-browser compatible
+- Lightweight and SEO-friendly
+- Customizable button styles (Button, Icon, Cover) and positions
+- Copy as HTML or plain text
+- Works with all WordPress themes and plugins
 
 Perfect for bloggers, developers, e-commerce stores, educational websites, and anyone who wants to make it easy for users to copy content from their WordPress site. 📋
 
@@ -36,13 +37,13 @@ Perfect for bloggers, developers, e-commerce stores, educational websites, and a
 
 There are 5 ways to use the "Copy Anything to Clipboard" plugin:
 
-1. **NEW: [Global Injector](https://docs.clipboard.agency/guides/global-injector/)** - Advanced injection with display conditions
+1. **NEW: [Global Injector](https://docs.clipboard.agency/guides/global-injector/)** – Advanced injection with display conditions
 2. [Automatically with "CSS Selector"](https://docs.clipboard.agency/guides/css-selectors/)
 3. [Manually with "Shortcode"](https://docs.clipboard.agency/guides/shortcodes/)
 4. Manually with "Elementor widgets"
 5. Manually with "Gutenberg blocks"
 
-=== METHOD 1 – Global Injector (NEW in v5.0.0)
+=== METHOD 1 – Global Injector (NEW in v5.0.0) ===
 
 The Global Injector is the most powerful way to add copy buttons to your website. It provides:
 
@@ -51,16 +52,16 @@ The Global Injector is the most powerful way to add copy buttons to your website
 * **Advanced Targeting** - Target specific CSS selectors with precision
 * **Performance Optimized** - Assets load only where needed
 
-==== How to Use Global Injector?
+==== How to Use Global Injector? ====
 
-- **Step 1** – Go to "Copy to Clipboard" → "Global Injector"
-- **Step 2** – Click "Add New Injector"
-- **Step 3** – Configure your CSS selector (e.g., `pre`, `code`, `blockquote`)
-- **Step 4** – Choose your style preset (Button, Icon, or Cover)
-- **Step 5** – Set display conditions (optional)
-- **Step 6** – Save and preview your changes
+* **Step 1** – Go to "Copy to Clipboard" → "Global Injector"
+* **Step 2** – Click "Add New Injector"
+* **Step 3** – Configure your CSS selector (e.g., `pre`, `code`, `blockquote`)
+* **Step 4** – Choose your style preset (Button, Icon, or Cover)
+* **Step 5** – Set display conditions (optional)
+* **Step 6** – Save and preview your changes
 
-=== METHOD 2 – Automatically with "CSS Selector"
+=== METHOD 2 – Automatically with "CSS Selector" ===
 
 This is the quick, most useful way and is mostly used by a lot of users with this plugin.
 
@@ -70,20 +71,20 @@ Use this method, if you want to add the copy button automatically to all the ele
 
 **Example 2:** Your blog post has blockquotes and you want to add the copy button to the blockquote. Simply set `blockquote` as your CSS selector and all blockquotes will have copy buttons automatically.
 
-==== How to Use with CSS Selector?
+==== How to Use with CSS Selector? ====
 
-- **Step 1** – Go to “Copy to Clipboard”
-- **Step 2** – Click on the “Add New” button
-- **Step 3** – Add the selector. E.g. `pre` or `blockquote`
-- **Step 4** – Click on “Create”
-- **Step 5** – Visit the page and see the copy button
+* **Step 1** – Go to “Copy to Clipboard”
+* **Step 2** – Click on the “Add New” button
+* **Step 3** – Add the selector. E.g. `pre` or `blockquote`
+* **Step 4** – Click on “Create”
+* **Step 5** – Visit the page and see the copy button
 
 For more details read:
 
 - [Add the copy button to Blockquote](https://docs.clipboard.agency/guides/shortcodes/)
 - [Add the copy button to Code Snippet](https://clipboard.agency/blog/how-to-add-copy-buttons-to-code-blocks/)
 
-=== METHOD 3 – Manually with "Shortcode"
+=== METHOD 3 – Manually with "Shortcode" ===
 
 You can use this method if you want to add the copy button to the specific element.
 
@@ -95,7 +96,7 @@ E.g.
 The zoom meeting is scheduled on data [copy]15 November 2022[/copy] please note down it.
 </code>
 
-==== How to Use with Shortcode?
+==== How to Use with Shortcode? ====
 
 You may use the shortcode `[copy_inline]` to copy the inline content.
 
@@ -130,7 +131,7 @@ Username: [copy_inline text="username"]
 Password: [copy_inline text="password" display="*********"]
 </code>
 
-=== METHOD 4 – Manually with "Elementor Widgets"
+=== METHOD 4 – Manually with "Elementor Widgets" ===
 
 We build a couple of different widgets for Elementor page builder.
 
@@ -165,14 +166,14 @@ You can use the following widgets to add the copy button to the specific element
 - [Travel Packing List](https://clipboard.agency/demos/#travel-packing-list) 🧳<br/>Prepare for your travels efficiently with our comprehensive packing list templates.
 - [Love Messages](https://clipboard.agency/demos/#love-messages) 💖<br/>Express your feelings with heartfelt love messages using our templates.
 
-==== How to Use with Elementor Widgets?
+==== How to Use with Elementor Widgets? ====
 
-- **Step 1** – “Install and activate the "Elementor" plugin
-- **Step 2** – Go to “Add/Edit with Elementor”
-- **Step 3** – Search for widget. E.g. "Copy"
-- **Step 4** – Drag and drop the widget to the page
-- **Step 5** – Set the content
-- **Step 6** – Publish the page and see the copy button
+* **Step 1** – Install and activate the "Elementor" plugin
+* **Step 2** – Go to “Add/Edit with Elementor”
+* **Step 3** – Search for widget. E.g. "Copy"
+* **Step 4** – Drag and drop the widget to the page
+* **Step 5** – Set the content
+* **Step 6** – Publish the page and see the copy button
 
 For more details read:
 
@@ -237,11 +238,13 @@ Yes! The plugin offers multiple style presets including Button, Icon, and Cover 
 = How do I control where copy buttons appear? =
 
 Use Display Conditions in the Global Injector! You can set conditions based on:
-* Specific pages or posts
-* Post types
-* Categories and tags
-* Custom taxonomies
-* User roles
+
+- Specific pages or posts
+- Post types
+- Categories and tags
+- Custom taxonomies
+- User roles
+
 This ensures copy buttons only appear where you need them and improves page performance.
 
 = Is it mobile-friendly? =
@@ -281,12 +284,24 @@ For more info check out the following:
 * Contribute with plugin [contact us](https://clipboard.agency/contact/) ✨
 * Make a [small donation](https://www.paypal.me/mwaghmare7/) for continue FREE support 💪
 
+== Screenshots ==
+
+== 1. Global Injector - Copy button rules ==
+Add and manage copy button rules with display conditions, style presets (Button, Icon, Cover), and live preview.
+
+== 2. Copy buttons on the frontend ==
+Copy buttons automatically added to code blocks, blockquotes, or any CSS selector you configure.
+
+== 3. Shortcode and Gutenberg blocks ==
+Use the [copy] and [copy_inline] shortcodes or the Copy Button, Copy Icon, Term Title, and Social Share blocks in the block editor.
+
 == Installation ==
 
 1. Install the <code>Copy Anything to Clipboard</code> plugin either via the WordPress plugin directory, or by uploading the files to your server at <code>wp-content/plugins</code>.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
 3. Go to "Copy to Clipboard" in your WordPress admin menu to start creating copy buttons.
 4. Choose your method:
+
    * **Global Injector (Recommended)** - Advanced injection with display conditions
    * **CSS Selector** - Automatic copy buttons for all matching elements
    * **Shortcode** - Manual copy buttons with `[copy]` or `[copy_inline]`
@@ -295,7 +310,25 @@ For more info check out the following:
 
 For detailed setup instructions, visit the [Getting Started Guide](https://clipboard.agency/doc/).
 
+== Blocks ==
+
+This plugin provides 4 blocks for the WordPress block editor:
+
+* **Copy Icon** - Allow users to copy code or text with an icon.
+* **Copy Button** - Allow users to copy code or text with a button.
+* **Term Title** - Display the title of the term (e.g. category, tag).
+* **Social Share** - Allow users to share content on social media.
+
 == Changelog ==
+
+= 5.2.0 =
+
+* **New: Copy As (Clipboard Type)** - Choose what gets copied per rule: Text only, HTML, Text + HTML (default), Image (Pro), JSON (Pro), SVG (Pro). Global Injector Rule Editor includes "Copy as" section; shortcode and Gutenberg blocks support `copy-as` attribute. Uses CTC CopyEngine with Clipboard API; fallbacks for image (HTTPS/CORS) and legacy browsers.
+* **New: Image format for Copy As Image (Pro)** - Choose PNG, JPEG, or WebP when copying as image. Pro adds Image format selector in Copy As section; free plugin provides `ctc.globalInjector.copyAs.after` hook for extensibility.
+* **Improvement: Copy As extensibility** - Free plugin now uses `ctc.globalInjector.copyAs.after` hook; Pro plugin renders Image format UI (PNG/JPEG/WebP) when Copy As is Image Blob. Follows Rank Math free/Pro pattern.
+* **Improvement: Pro extension points** - Added `ctc/global_injector/rule_enum_fields`, `ctc/global_injector/rest_rule_data` filters; `ctc.globalInjector.fieldsToCompare` for unsaved-changes detection. Pro adds image_format via extend_meta_mapping, extend_admin_rule_data, extend_frontend_rule_data.
+* **New: ImageFormatSection (Pro)** - Pro component for Image format selection with ButtonGroup and docs link.
+* **Fix: Image format persistence** - Image format selection now persists after save and page refresh (load_rules and REST get_rule_data include image_format when Pro is active).
 
 = 5.1.0 =
 
@@ -458,43 +491,6 @@ For detailed setup instructions, visit the [Getting Started Guide](https://clipb
 * New: Added table Elementor widget to display content in horizontal, or vertical table and allow to copy the content.
 
 = 3.3.0 =
-
-* New: Added button styling support for Elementor widget Copy Icon.
-* New: Added button styling support for Elementor widget Copy Button.
-* New: Added button styling support for Elementor widget Email Sample.
-* New: Added button styling support for Elementor widget Email Address.
-* New: Added button styling support for Elementor widget Phone Number.
-* New: Added button styling support for Elementor widget Blockquote.
-* New: Added button styling support for Elementor widget Code Snippet.
-* New: Added button styling support for Elementor widget Message.
-* New: Added button styling support for Elementor widget Deal.
-* New: Added button styling support for Elementor widget Coupon.
-* New: Added button styling support for Elementor widget AI Prompt Generator.
-* Improvement: Updated Freemius SDK version 2.6.0.
-
-= 3.2.1 =
-
-* Improvement: Improved the Elementor "Coupon Code" widget controls and structure.
-* Improvement: Improved the Elementor "Deal" widget controls and structure.
-* Improvement: Improved the Elementor "Email Address" widget controls and structure.
-* Improvement: Improved the Elementor "Email Sample" widget controls and structure.
-* Improvement: Improved the Elementor "Message" widget controls and structure.
-* Improvement: Improved the Elementor "Phone Number" widget controls and structure.
-* Improvement: Improved the Elementor "Shayari" widget controls and structure.
-* Improvement: Improved the Elementor "SMS" widget controls and structure.
-* Improvement: Improved the Elementor "Wish" widget controls and structure.
-
-= 3.2.0 =
-
-* New: Added the Elementor widget category "Copy Anything to Clipboard".
-* Improvement: Compatibility to WordPress 6.4.1.
-* Improvement: Improved the Elementor "AI Prompt Generator" widget controls and structure.
-* Improvement: Improved the Elementor "Blockquote" widget controls and structure.
-* Improvement: Improved the Elementor "Code Snippet" widget controls and structure.
-* Improvement: Improved the Elementor "Copy to Clipboard Button" widget controls and structure.
-* Improvement: Improved the Elementor "Copy to Clipboard Icon" widget controls and structure.
-
-= 3.1.0 =
 
 * New: Added button styling support for Elementor widget Copy Icon.
 * New: Added button styling support for Elementor widget Copy Button.
