@@ -10,6 +10,7 @@ namespace CTC\Global_Injector;
 
 use CTC\Global_Injector;
 use CTC\Helper;
+use CTC\Analytics\Database as Analytics_Database;
 
 /**
  * Main Rule List class.
@@ -85,6 +86,7 @@ class Main_Rule_List {
 			[
 				'wp-element',
 				'wp-i18n',
+				'wp-api-fetch',
 				'lodash',
 				'jquery',
 			],
@@ -94,21 +96,48 @@ class Main_Rule_List {
 
 		$rules = Global_Injector::get()->get_admin_rules();
 
+		$rule_stats = [];
+		if ( ! empty( $rules ) && class_exists( 'CTC\Analytics\Database' ) ) {
+			$db        = Analytics_Database::get();
+			$now       = Helper::mysql_now();
+			$date_from = Helper::mysql_date_ago( '-30 days' );
+			foreach ( $rules as $rule ) {
+				$id = isset( $rule['id'] ) ? (int) $rule['id'] : 0;
+				if ( $id > 0 ) {
+					$rule_stats[ $id ] = $db->get_rule_stats( $id, $date_from, $now );
+				}
+			}
+		}
+
+		$localize_data = [
+			'isPro'      => Helper::is_pro(),
+			'version'    => CTC_VER,
+			'rules'      => $rules,
+			'rule_stats' => $rule_stats,
+			'apiUrl'     => rest_url( 'ctc/v1/' ),
+			'nonce'      => wp_create_nonce( 'wp_rest' ),
+			'urls'       => [
+				'addNew'       => admin_url( 'options-general.php?page=ctc-global-injector' ),
+				'dashboard'    => admin_url( 'options-general.php?page=ctc' ),
+				'editRuleBase' => admin_url( 'options-general.php?page=ctc-global-injector&rule=' ),
+				'analytics'    => admin_url( 'options-general.php?page=ctc-analytics' ),
+			],
+		];
+
+		/**
+		 * Filter Main Rule List localize data.
+		 *
+		 * Pro can use this to add urls.analytics and ruleActivity data.
+		 *
+		 * @since 5.3.0
+		 * @param array $data Localized data array.
+		 */
+		$localize_data = apply_filters( 'ctc/main_rule_list/localize_data', $localize_data );
+
 		wp_localize_script(
 			'ctc-main-rule-list',
 			'CTCMainRuleList',
-			[
-				'isPro'   => Helper::is_pro(),
-				'version' => CTC_VER,
-				'rules'   => $rules,
-				'apiUrl'  => rest_url( 'ctc/v1/' ),
-				'nonce'   => wp_create_nonce( 'wp_rest' ),
-				'urls'    => [
-					'addNew'   => admin_url( 'options-general.php?page=ctc-global-injector' ),
-					'dashboard' => admin_url( 'options-general.php?page=ctc' ),
-					'editRuleBase' => admin_url( 'options-general.php?page=ctc-global-injector&rule=' ),
-				],
-			]
+			$localize_data
 		);
 	}
 }

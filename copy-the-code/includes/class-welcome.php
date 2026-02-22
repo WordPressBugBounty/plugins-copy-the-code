@@ -132,16 +132,16 @@ class Welcome {
 	private function get_welcome_content() {
 		if ( $this->is_fresh_install() ) {
 			return [
-				'title'   => __( 'Thanks for installing Copy Anything to Clipboard!', 'ctc' ),
-				'message' => __( 'Add copy-to-clipboard buttons to any element on your site in seconds. The new Global Injector makes it easier than ever — no coding required.', 'ctc' ),
+				'title'   => __( 'Copy Anything to Clipboard is ready', 'ctc' ),
+				'message' => __( 'Add copy buttons to code blocks, tables, and any content. Use Global Injector to set rules and styles with no coding.', 'ctc' ),
 				'type'    => 'fresh',
 			];
 		}
 
 		// Upgrade message.
 		return [
-			'title'   => __( 'Welcome to Copy Anything to Clipboard!', 'ctc' ),
-			'message' => __( 'This major update introduces the powerful Global Injector with visual style presets, display conditions, and live preview. Your existing settings have been preserved.', 'ctc' ),
+			'title'   => __( 'Copy Anything to Clipboard updated', 'ctc' ),
+			'message' => __( 'Global Injector is here: visual presets, display conditions, and live preview. Your existing settings have been preserved.', 'ctc' ),
 			'type'    => 'upgrade',
 		];
 	}
@@ -169,16 +169,11 @@ class Welcome {
 				<div class="ctc-welcome-notice-text">
 					<p class="ctc-welcome-notice-title">
 						<strong><?php echo esc_html( $content['title'] ); ?></strong>
-						<?php if ( 'fresh' === $content['type'] ) : ?>
-							<span class="ctc-welcome-emoji">🎉</span>
-						<?php else : ?>
-							<span class="ctc-welcome-emoji">🚀</span>
-						<?php endif; ?>
 					</p>
 					<p class="ctc-welcome-notice-message"><?php echo esc_html( $content['message'] ); ?></p>
 					<p class="ctc-welcome-notice-actions">
 						<a href="<?php echo esc_url( $global_injector_url ); ?>" class="button button-primary">
-							<?php esc_html_e( 'Get Started', 'ctc' ); ?>
+							<?php esc_html_e( 'Open Rules', 'ctc' ); ?>
 						</a>
 						<a href="<?php echo esc_url( $docs_url ); ?>" class="button button-secondary" target="_blank" rel="noopener noreferrer">
 							<?php esc_html_e( 'View Documentation', 'ctc' ); ?>

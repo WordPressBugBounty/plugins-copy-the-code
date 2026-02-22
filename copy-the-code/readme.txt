@@ -1,14 +1,14 @@
 === Copy Anything to Clipboard ===
 Contributors: clipboardagency, freemius
 Donate link: https://www.paypal.me/mwaghmare7/
-Tags: clipboard, copy, copy-to-clipboard, copy-button, copy-code
+Tags: clipboard, copy, copy-to-clipboard, analytics, stats
 Tested up to: 6.9
-Stable tag: 5.2.0
+Stable tag: 5.3.0
 Requires PHP: 5.6
 Requires at least: 4.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
-Copy Anything to Clipboard is the #1 WordPress plugin with **317,488+** downloads 🚀
+Copy Anything to Clipboard is the #1 WordPress plugin Trusted by 10,000+ active websites with 325,538+ downloads 🚀. Add smart copy buttons with built-in analytics.
 
 == Description ==
 
@@ -320,6 +320,13 @@ This plugin provides 4 blocks for the WordPress block editor:
 * **Social Share** - Allow users to share content on social media.
 
 == Changelog ==
+
+= 5.3.0 =
+
+* **New: Analytics (Pro)** - See what gets copied. Copy tracking for Global Injector rules: track copy events per rule (rule ID, timestamp, success; no content stored). Analytics dashboard at Settings → Analytics: summary cards (total copies, active rules, top rule, % change), date range filter (24h, 7d, 30d, custom), activity chart, top rules table. Export CSV (Pro).
+* **New: Activity column in Main Rule List** - Copy count and 24h % change per rule. Free: count + blurred trend + Pro CTA; Pro: real trend. Link from Activity to Analytics filtered by rule.
+* **New: REST API for analytics** - `POST /ctc/v1/analytics/events` (public, for frontend tracking); GET endpoints and export for authenticated Pro users.
+* **Improvement: Global Injector** - Analytics option/link in rule editor and dashboard to open Analytics page (filtered by rule when applicable).
 
 = 5.2.0 =
 

@@ -101,10 +101,22 @@ class Frontend {
 		}
 
 		// Localize script with rules and page context.
+		$localize_data = $this->get_localize_data( $rules );
+		/**
+		 * Filter frontend localize data.
+		 *
+		 * Pro can use this to add eventsUrl for analytics tracking.
+		 *
+		 * @since 5.3.0
+		 * @param array $data Localized data array.
+		 * @param array $rules Active rules for the current page.
+		 */
+		$localize_data = apply_filters( 'ctc/global_injector/frontend_localize_data', $localize_data, $rules );
+
 		wp_localize_script(
 			'ctc-global-injector-frontend',
 			'ctcGlobalInjector',
-			$this->get_localize_data( $rules )
+			$localize_data
 		);
 	}
 
@@ -119,8 +131,7 @@ class Frontend {
 		return [
 			'rules'       => $rules,
 			'apiUrl'      => rest_url( 'ctc/v1/rules' ),
-			'eventsUrl'   => '', // rest_url( 'ctc/v1/events' ),
-			'nonce'       => wp_create_nonce( 'wp_rest' ),
+			'eventsUrl'   => rest_url( 'ctc/v1/analytics/events' ),
 			'isPro'       => Helper::is_pro(),
 			'postId'      => get_the_ID() ? get_the_ID() : null,
 			'postType'    => get_post_type() ? get_post_type() : null,
@@ -351,20 +362,21 @@ class Frontend {
 		$style_config = $this->get_style_config( $post->ID, $visual_style );
 
 		return [
-			'id'               => $post->ID,
-			'selector'         => $selector,
-			'exclude_selector' => get_post_meta( $post->ID, 'exclude_selector', true ),
-			'visual_style'     => $visual_style,
-			'button_text'      => $this->get_meta_with_default( $post->ID, 'button-text', __( 'Copy', 'ctc' ) ),
-			'success_text'     => $this->get_meta_with_default( $post->ID, 'button-copy-text', __( 'Copied!', 'ctc' ) ),
-			'tooltip_text'     => $this->get_meta_with_default( $post->ID, 'tooltip-text', __( 'Copy to clipboard', 'ctc' ) ),
-			'button_position'  => $this->migrate_position( $this->get_meta_with_default( $post->ID, 'button-position', 'inside_top_right' ) ),
-			'copy_format'      => $this->get_meta_with_default( $post->ID, 'copy-format', 'text' ),
-			'copy_as'          => $this->get_copy_as_for_rule( $post->ID ),
-			'icon_enabled'     => $this->get_bool_meta( $post->ID, 'icon_enabled', true ),
-			'icon_position'    => $this->get_meta_with_default( $post->ID, 'icon_position', 'left' ),
-			'icon_key'         => $this->get_meta_with_default( $post->ID, 'icon_key', 'clipboard' ),
-			'style'            => $style_config,
+			'id'                => $post->ID,
+			'selector'          => $selector,
+			'exclude_selector'  => get_post_meta( $post->ID, 'exclude_selector', true ),
+			'visual_style'      => $visual_style,
+			'button_text'       => $this->get_meta_with_default( $post->ID, 'button-text', __( 'Copy', 'ctc' ) ),
+			'success_text'      => $this->get_meta_with_default( $post->ID, 'button-copy-text', __( 'Copied!', 'ctc' ) ),
+			'tooltip_text'      => $this->get_meta_with_default( $post->ID, 'tooltip-text', __( 'Copy to clipboard', 'ctc' ) ),
+			'button_position'   => $this->migrate_position( $this->get_meta_with_default( $post->ID, 'button-position', 'inside_top_right' ) ),
+			'copy_format'       => $this->get_meta_with_default( $post->ID, 'copy-format', 'text' ),
+			'copy_as'           => $this->get_copy_as_for_rule( $post->ID ),
+			'analytics_enabled' => $this->get_bool_meta( $post->ID, 'analytics_enabled', true ),
+			'icon_enabled'      => $this->get_bool_meta( $post->ID, 'icon_enabled', true ),
+			'icon_position'     => $this->get_meta_with_default( $post->ID, 'icon_position', 'left' ),
+			'icon_key'          => $this->get_meta_with_default( $post->ID, 'icon_key', 'clipboard' ),
+			'style'             => $style_config,
 		];
 	}
 
@@ -472,8 +484,8 @@ class Frontend {
 	 * @return string One of: text, html, text_and_html, image, json, svg.
 	 */
 	private function get_copy_as_for_rule( $post_id ) {
-		$copy_as = get_post_meta( $post_id, 'copy-as', true );
-		$valid_types    = [ 'text', 'html', 'text_and_html', 'image', 'json', 'svg' ];
+		$copy_as     = get_post_meta( $post_id, 'copy-as', true );
+		$valid_types = [ 'text', 'html', 'text_and_html', 'image', 'json', 'svg' ];
 		if ( ! empty( $copy_as ) && in_array( $copy_as, $valid_types, true ) ) {
 			return $copy_as;
 		}

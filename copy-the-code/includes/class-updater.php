@@ -75,6 +75,11 @@ class Updater {
 		// Run version-specific updates.
 		$this->run_updates( $saved_version, $current_version );
 
+		// Create ctc_analytics when upgrading to 5.3.0+ or on first install.
+		if ( version_compare( $saved_version, '5.3.0', '<' ) ) {
+			\CTC\Analytics\Database::create_table();
+		}
+
 		// Update stored version.
 		update_option( self::VERSION_OPTION, $current_version );
 
@@ -101,11 +106,21 @@ class Updater {
 			$this->update_to_5_0_0();
 		}
 
-		// Add future version updates here.
-		// Example:
-		// if ( version_compare( $from_version, '5.1.0', '<' ) ) {
-		//     $this->update_to_5_1_0();
-		// }
+		// Update to 5.4.0: single analytics table ctc_analytics.
+		if ( version_compare( $from_version, '5.4.0', '<' ) ) {
+			$this->update_to_5_4_0();
+		}
+	}
+
+	/**
+	 * Migrate to single analytics table ctc_analytics.
+	 * If ctc_copy_events exists, rename to ctc_analytics; otherwise create ctc_analytics.
+	 *
+	 * @since 5.4.0
+	 * @return void
+	 */
+	private function update_to_5_4_0() {
+		\CTC\Analytics\Database::create_table();
 	}
 
 	/**

@@ -11,6 +11,7 @@ namespace CTC;
 use CTC\Dashboard;
 use CTC\Global_Injector;
 use CTC\Global_Injector\Main_Rule_List;
+use CTC\Analytics\Analytics;
 
 /**
  * Base
@@ -51,6 +52,7 @@ class Base {
 	public function __construct() {
 		add_action( 'admin_menu', [ $this, 'register_menus' ] );
 		add_action( 'load-settings_page_ctc', [ $this, 'load_dashboard' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'load_rules_list_assets' ], 10 );
 	}
 
 	/**
@@ -97,6 +99,15 @@ class Base {
 			[ Global_Injector::get(), 'render' ]
 		);
 
+		add_submenu_page(
+			'options-general.php',
+			__( 'Analytics', 'ctc' ),
+			'↳ ' . __( 'Analytics', 'ctc' ),
+			'manage_options',
+			'ctc-analytics',
+			[ Analytics::get(), 'render' ]
+		);
+
 		/*
 		add_submenu_page(
 			'options-general.php',
@@ -133,13 +144,26 @@ class Base {
 	}
 
 	/**
+	 * Load Main Rule List assets on the rules list page (runs before Pro enqueues ctc-main-rule-list-pro).
+	 *
+	 * @since 5.1.0
+	 * @param string $hook Current admin page hook.
+	 * @return void
+	 */
+	public function load_rules_list_assets( $hook ) {
+		if ( 'settings_page_ctc-rules' !== $hook ) {
+			return;
+		}
+		Main_Rule_List::get()->bootstrap();
+	}
+
+	/**
 	 * Render rules list page (Main Rule List UI mounts here).
 	 *
 	 * @since 5.1.0
 	 * @return void
 	 */
 	public function render_rules_list() {
-		Main_Rule_List::get()->bootstrap();
 		?>
 		<div class="wrap ctc-admin-root ctc-main-rule-list-page" id="ctc-main-rule-list-root"></div>
 		<?php

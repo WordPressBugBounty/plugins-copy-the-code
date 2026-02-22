@@ -47,4 +47,83 @@ class Helper {
 		$css = (string) preg_replace( '/\s+/', ' ', $css );
 		return trim( $css );
 	}
+
+	/**
+	 * Current date/time in MySQL format (site timezone).
+	 *
+	 * @since 5.3.0
+	 * @return string
+	 */
+	public static function mysql_now() {
+		return current_time( 'mysql' );
+	}
+
+	/**
+	 * Date relative to now (or a given timestamp) in MySQL format.
+	 *
+	 * @since 5.3.0
+	 * @param string   $relative       Relative time e.g. '-30 days', '-24 hours'.
+	 * @param int|null $from_timestamp Optional base timestamp (UTC); default time().
+	 * @return string MySQL datetime (Y-m-d H:i:s).
+	 */
+	public static function mysql_date_ago( $relative, $from_timestamp = null ) {
+		if ( null === $from_timestamp ) {
+			$from_timestamp = time();
+		}
+		return gmdate( 'Y-m-d H:i:s', strtotime( $relative, $from_timestamp ) );
+	}
+
+	/**
+	 * Epoch date for "all time" analytics (very old start date).
+	 *
+	 * @since 5.3.0
+	 * @return string MySQL datetime.
+	 */
+	public static function mysql_epoch() {
+		return '1970-01-01 00:00:00';
+	}
+
+	/**
+	 * Map analytics period key to number of days.
+	 *
+	 * @since 5.3.0
+	 * @param string $period One of '24h', '7d', '30d', '90d'.
+	 * @return int Number of days (1, 7, 30, or 90; default 7).
+	 */
+	public static function analytics_period_to_days( $period ) {
+		$map = [
+			'24h' => 1,
+			'7d'  => 7,
+			'30d' => 30,
+			'90d' => 90,
+		];
+		return isset( $map[ $period ] ) ? $map[ $period ] : 7;
+	}
+
+	/**
+	 * Get analytics date range (from/to) in MySQL datetime format.
+	 *
+	 * Use when custom from/to are provided, or derive from period.
+	 *
+	 * @since 5.3.0
+	 * @param string $period Period key ('24h', '7d', '30d', '90d').
+	 * @param string|null $from Optional custom start date (Y-m-d or MySQL datetime).
+	 * @param string|null $to   Optional custom end date (Y-m-d or MySQL datetime).
+	 * @return array{from: string, to: string} Keys 'from' and 'to' as MySQL datetime strings.
+	 */
+	public static function analytics_date_range( $period, $from = null, $to = null ) {
+		if ( $from && $to ) {
+			return [
+				'from' => sanitize_text_field( $from ),
+				'to'   => sanitize_text_field( $to ),
+			];
+		}
+		$days       = self::analytics_period_to_days( $period );
+		$start_date = self::mysql_date_ago( "-{$days} days" );
+		$end_date   = self::mysql_now();
+		return [
+			'from' => $start_date,
+			'to'   => $end_date,
+		];
+	}
 }

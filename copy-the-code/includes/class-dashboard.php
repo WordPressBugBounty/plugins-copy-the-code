@@ -84,7 +84,7 @@ class Dashboard {
 			true
 		);
 
-		$rules = Global_Injector::get()->get_admin_rules();
+		$rules        = Global_Injector::get()->get_admin_rules();
 		$active_count = array_reduce(
 			$rules,
 			function ( $n, $r ) {
@@ -106,14 +106,14 @@ class Dashboard {
 				'version'     => CTC_VER,
 				'recentRules' => $recent_rules,
 				'urls'        => [
-					'rules'            => admin_url( 'options-general.php?page=ctc-rules' ),
-					'addNew'           => admin_url( 'options-general.php?page=ctc-global-injector' ),
-					'docs'             => 'https://docs.clipboard.agency/',
-					'changelog'        => 'https://docs.clipboard.agency/changelog',
-					'gettingStarted'   => 'https://docs.clipboard.agency/getting-started',
-					'globalInjector'   => 'https://docs.clipboard.agency/guides/global-injector',
-					'visualStyles'     => 'https://docs.clipboard.agency/guides/visual-styles',
-					'editRule'         => admin_url( 'options-general.php?page=ctc-global-injector&rule=' ),
+					'rules'          => admin_url( 'options-general.php?page=ctc-rules' ),
+					'addNew'         => admin_url( 'options-general.php?page=ctc-global-injector' ),
+					'docs'           => 'https://docs.clipboard.agency/',
+					'changelog'      => 'https://docs.clipboard.agency/changelog',
+					'gettingStarted' => 'https://docs.clipboard.agency/getting-started',
+					'globalInjector' => 'https://docs.clipboard.agency/guides/global-injector',
+					'visualStyles'   => 'https://docs.clipboard.agency/guides/visual-styles',
+					'editRule'       => admin_url( 'options-general.php?page=ctc-global-injector&rule=' ),
 				],
 			]
 		);

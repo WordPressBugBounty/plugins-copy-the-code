@@ -256,6 +256,7 @@ class Rest {
 			'cover_font_size'      => 'cover_font_size',
 			'cover_padding_x'      => 'cover_padding_x',
 			'cover_padding_y'      => 'cover_padding_y',
+			'analytics_enabled'    => 'analytics_enabled',
 		];
 
 		/**
@@ -271,7 +272,7 @@ class Rest {
 		// Fields that need numeric sanitization.
 		$numeric_fields = [ 'border_radius', 'font_size', 'padding_x', 'padding_y', 'icon_size', 'padding', 'border_width', 'overlay_opacity', 'blur', 'cover_border_radius', 'cover_font_size', 'cover_padding_x', 'cover_padding_y' ];
 		// Fields that need boolean sanitization.
-		$boolean_fields = [ 'icon_enabled' ];
+		$boolean_fields = [ 'icon_enabled', 'analytics_enabled' ];
 		// Fields that need hex color sanitization.
 		$color_fields = [ 'text_color', 'bg_color', 'icon_color', 'icon_hover_color', 'border_color', 'overlay_color', 'hover_overlay_color', 'cover_text_color', 'cover_bg_color', 'cover_hover_bg_color' ];
 
@@ -364,6 +365,7 @@ class Rest {
 		update_post_meta( $post_id, 'button-copy-text', __( 'Copied!', 'ctc' ) );
 		update_post_meta( $post_id, 'button-position', 'inside' );
 		update_post_meta( $post_id, 'is_active', $is_active );
+		update_post_meta( $post_id, 'analytics_enabled', '1' );
 
 		return rest_ensure_response(
 			[
@@ -446,6 +448,10 @@ class Rest {
 		$icon_enabled_raw = get_post_meta( $id, 'icon_enabled', true );
 		$icon_enabled     = '' === $icon_enabled_raw ? true : '1' === $icon_enabled_raw;
 
+		// Analytics enabled: default true when meta missing (existing rules).
+		$analytics_enabled_raw = get_post_meta( $id, 'analytics_enabled', true );
+		$analytics_enabled     = '' === $analytics_enabled_raw ? true : '1' === $analytics_enabled_raw;
+
 		$rule = [
 			'id'                   => $post->ID,
 			'title'                => isset( $post->post_title ) ? $post->post_title : __( 'Untitled Rule', 'ctc' ),
@@ -467,6 +473,7 @@ class Rest {
 			'icon_enabled'         => $icon_enabled,
 			'icon_position'        => $get_meta( 'icon_position', 'left' ),
 			'icon_key'             => $get_meta( 'icon_key', 'clipboard' ),
+			'analytics_enabled'    => $analytics_enabled,
 			// Style fields (stored on rule for now, uses default preset values as fallback).
 			// Button style fields.
 			'text_color'           => $get_meta( 'text_color', $style_default( 'text_color', '#ffffff' ) ),

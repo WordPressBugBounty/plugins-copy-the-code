@@ -52,6 +52,24 @@ class Global_Injector {
 	 */
 	public function __construct() {
 		// Menus are registered under Settings in \CTC\Base::register_menus().
+		add_action( 'admin_enqueue_scripts', [ $this, 'maybe_enqueue_global_injector_assets' ], 10 );
+	}
+
+	/**
+	 * Enqueue and localize Global Injector assets on the correct admin page.
+	 *
+	 * Runs at priority 10 so the free script is registered before Pro (priority 20)
+	 * enqueues ctc-global-injector-pro with dependency ctc-global-injector.
+	 *
+	 * @since 5.3.0
+	 * @param string $hook Current admin page hook.
+	 */
+	public function maybe_enqueue_global_injector_assets( $hook ) {
+		if ( 'settings_page_ctc-global-injector' !== $hook ) {
+			return;
+		}
+		$this->enqueue_assets();
+		$this->localize_data();
 	}
 
 	/**
@@ -65,8 +83,7 @@ class Global_Injector {
 		add_filter( 'admin_footer_text', '__return_empty_string' );
 		add_filter( 'update_footer', '__return_empty_string', 11 );
 
-		$this->enqueue_assets();
-		$this->localize_data();
+		// Assets and localize are enqueued in maybe_enqueue_global_injector_assets().
 		?>
 		<div class="wrap ctc-admin-root ctc-global-injector-page" id="ctc-global-injector-root"></div>
 		<?php
@@ -279,6 +296,10 @@ class Global_Injector {
 			$icon_position    = get_post_meta( $post->ID, 'icon_position', true );
 			$icon_key         = get_post_meta( $post->ID, 'icon_key', true );
 
+			// Analytics enabled: default true when meta missing (existing rules).
+			$analytics_enabled_raw = get_post_meta( $post->ID, 'analytics_enabled', true );
+			$analytics_enabled     = '' === $analytics_enabled_raw ? true : '1' === $analytics_enabled_raw;
+
 			$rule = [
 				'id'                   => $post->ID,
 				'title'                => isset( $post->post_title ) ? $post->post_title : __( 'Untitled Rule', 'ctc' ),
@@ -292,6 +313,7 @@ class Global_Injector {
 				'reveal_text'          => ! empty( $reveal_text ) ? $reveal_text : __( 'Click to Reveal', 'ctc' ),
 				'button_position'      => ! empty( $button_position ) ? $button_position : 'inside',
 				'is_active'            => $is_active,
+				'analytics_enabled'    => $analytics_enabled,
 				'display_conditions'   => ! empty( $display_conditions ) ? $display_conditions : [],
 				'button_title'         => ! empty( $button_title ) ? $button_title : '',
 				'copy_format'          => ! empty( $copy_format ) ? $copy_format : '',
