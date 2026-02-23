@@ -279,6 +279,36 @@ class Shortcode {
 	}
 
 	/**
+	 * Get sanitized display HTML for shortcode content.
+	 *
+	 * Uses wp_kses with filterable allowed HTML so formatted content (e.g. bold) renders
+	 * while keeping output safe. Themes/plugins can extend via ctc/shortcode/display_allowed_html.
+	 *
+	 * @since 5.3.1
+	 *
+	 * @param array $atts Shortcode attributes (must include 'display').
+	 * @return string Sanitized HTML for display.
+	 */
+	private function get_display_html( $value ) {
+		$allowed = wp_kses_allowed_html( 'post' );
+
+		/**
+		 * Filter allowed HTML for [copy] shortcode display content.
+		 *
+		 * Use this to add or restrict tags/attributes for the content between [copy][/copy]
+		 * when it is rendered on the front end (e.g. add span with class for highlights).
+		 *
+		 * @since 5.3.1
+		 *
+		 * @param array $allowed Allowed HTML (wp_kses format).
+		 * @param array $atts    Shortcode attributes.
+		 */
+		$allowed = apply_filters( 'ctc/shortcode/display_allowed_html', $allowed, $value );
+
+		return wp_kses( $value, $allowed );
+	}
+
+	/**
 	 * Fix WordPress wptexturize() inside CSS var() functions.
 	 *
 	 * WordPress converts -- to en-dash (–) and --- to em-dash (—).
@@ -392,7 +422,7 @@ class Shortcode {
 				aria-label="<?php echo esc_attr( $atts['tooltip'] ); ?>"
 			<?php endif; ?>
 		>
-			<span class="ctc-shortcode__text <?php echo esc_attr( $hidden_class ); ?>"><?php echo esc_html( $atts['display'] ); ?></span>
+			<span class="ctc-shortcode__text <?php echo esc_attr( $hidden_class ); ?>"><?php echo $this->get_display_html( $atts['display'] ); ?></span>
 			<?php echo $icon_html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 			<span class="ctc-shortcode__success" aria-live="polite"></span>
 		</<?php echo esc_attr( $tag ); ?>>

@@ -3,7 +3,7 @@ Contributors: clipboardagency, freemius
 Donate link: https://www.paypal.me/mwaghmare7/
 Tags: clipboard, copy, copy-to-clipboard, analytics, stats
 Tested up to: 6.9
-Stable tag: 5.3.0
+Stable tag: 5.3.1
 Requires PHP: 5.6
 Requires at least: 4.4
 License: GPLv2 or later
@@ -320,6 +320,11 @@ This plugin provides 4 blocks for the WordPress block editor:
 * **Social Share** - Allow users to share content on social media.
 
 == Changelog ==
+
+= 5.3.1 =
+
+* **Fix: [copy] shortcode with formatted content** - When the shortcode encloses formatted text (e.g. bold), the front end now displays the formatting and copies plain text to the clipboard. Display uses allowed HTML (filterable); copy uses plain text unless `copy-as="html"`. [Thanks @jayceezay](https://wordpress.org/support/topic/copy-shortcode-is-broken/)
+* **New (developer):** Filter `ctc/shortcode/display_allowed_html` to customize allowed HTML for shortcode display content (e.g. add custom markup support).
 
 = 5.3.0 =
 
