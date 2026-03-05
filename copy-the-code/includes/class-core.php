@@ -22,7 +22,7 @@ final class CTC {
      *
      * @var string
      */
-    public $version = '5.3.1';
+    public $version = '5.4.0';
 
     /**
      * The single instance of the class.
@@ -53,6 +53,7 @@ final class CTC {
     private function setup() {
         $this->includes();
         register_activation_hook( CTC_FILE, [__CLASS__, 'activation'] );
+        register_deactivation_hook( CTC_FILE, [__CLASS__, 'deactivation'] );
         add_action( 'init', [$this, 'init'], 0 );
         add_action( 'plugins_loaded', [$this, 'load_textdomain'], 9 );
         add_filter( 'plugin_action_links_' . plugin_basename( CTC_FILE ), [$this, 'action_links'] );
@@ -85,8 +86,10 @@ final class CTC {
         \CTC\Post_Types::get();
         \CTC\Updater::get();
         \CTC\Welcome::get();
+        \CTC\Analytics\Database::get();
         \CTC\Global_Injector\Style_Presets::get();
         \CTC\Global_Injector\Rest::get();
+        \CTC\Analytics::get();
         \CTC\Analytics\Rest::get();
         \CTC\Shortcode::get();
         \CTC\Elementor\Blocks::get();
@@ -128,6 +131,10 @@ final class CTC {
      * @since 5.1.0
      */
     public static function activation() {
+        // Ensure daily cleanup of old analytics events is scheduled for both free and Pro.
+        if ( !wp_next_scheduled( 'ctc_analytics_cleanup' ) ) {
+            wp_schedule_event( time() + DAY_IN_SECONDS, 'daily', 'ctc_analytics_cleanup' );
+        }
         // Check if this is the premium version (has /premium/ folder).
         $is_premium = file_exists( CTC_DIR . 'premium/' );
         if ( !$is_premium ) {
@@ -150,6 +157,17 @@ final class CTC {
                 deactivate_plugins( $free_plugin );
             }
         }
+    }
+
+    /**
+     * Plugin deactivation callback.
+     *
+     * Clears scheduled analytics cleanup events.
+     *
+     * @since 5.4.0
+     */
+    public static function deactivation() {
+        wp_clear_scheduled_hook( 'ctc_analytics_cleanup' );
     }
 
 }

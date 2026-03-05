@@ -49,21 +49,21 @@ class Helper {
 	}
 
 	/**
-	 * Current date/time in MySQL format (site timezone).
+	 * Current date/time in MySQL format (UTC).
 	 *
 	 * @since 5.3.0
 	 * @return string
 	 */
 	public static function mysql_now() {
-		return current_time( 'mysql' );
+		return current_time( 'mysql', true );
 	}
 
 	/**
-	 * Date relative to now (or a given timestamp) in MySQL format.
+	 * Date relative to now (or a given timestamp) in MySQL format (UTC).
 	 *
 	 * @since 5.3.0
 	 * @param string   $relative       Relative time e.g. '-30 days', '-24 hours'.
-	 * @param int|null $from_timestamp Optional base timestamp (UTC); default time().
+	 * @param int|null $from_timestamp Optional base timestamp (UTC); default current timestamp.
 	 * @return string MySQL datetime (Y-m-d H:i:s).
 	 */
 	public static function mysql_date_ago( $relative, $from_timestamp = null ) {
@@ -87,15 +87,17 @@ class Helper {
 	 * Map analytics period key to number of days.
 	 *
 	 * @since 5.3.0
-	 * @param string $period One of '24h', '7d', '30d', '90d'.
-	 * @return int Number of days (1, 7, 30, or 90; default 7).
+	 * @param string $period One of '24h', '7d', '30d', '60d', '90d', '180d'.
+	 * @return int Number of days; default 7.
 	 */
 	public static function analytics_period_to_days( $period ) {
 		$map = [
-			'24h' => 1,
-			'7d'  => 7,
-			'30d' => 30,
-			'90d' => 90,
+			'24h'  => 1,
+			'7d'   => 7,
+			'30d'  => 30,
+			'60d'  => 60,
+			'90d'  => 90,
+			'180d' => 180,
 		];
 		return isset( $map[ $period ] ) ? $map[ $period ] : 7;
 	}

@@ -121,6 +121,11 @@ class Updater {
 	 */
 	private function update_to_5_4_0() {
 		\CTC\Analytics\Database::create_table();
+
+		// Ensure daily cleanup of old analytics events is scheduled after upgrading to 5.4.0+.
+		if ( ! wp_next_scheduled( 'ctc_analytics_cleanup' ) ) {
+			wp_schedule_event( time() + DAY_IN_SECONDS, 'daily', 'ctc_analytics_cleanup' );
+		}
 	}
 
 	/**

@@ -30,16 +30,16 @@ function ctc_fs() {
     }
     require_once $freemius_sdk_path;
     $ctc_fs = fs_dynamic_init( [
-        'id'              => '2780',
-        'slug'            => 'ctc',
-        'type'            => 'plugin',
-        'public_key'      => 'pk_15a174f8c30f506a9a35ccbf0fa76',
-        'is_premium'      => false,
-        'premium_suffix'  => 'Premium',
-        'has_addons'      => false,
-        'has_paid_plans'  => true,
-        'has_affiliation' => 'selected',
-        'menu'            => [
+        'id'               => '2780',
+        'slug'             => 'ctc',
+        'type'             => 'plugin',
+        'public_key'       => 'pk_15a174f8c30f506a9a35ccbf0fa76',
+        'is_premium'       => false,
+        'premium_suffix'   => 'Premium',
+        'has_addons'       => false,
+        'has_paid_plans'   => true,
+        'has_affiliation'  => 'selected',
+        'menu'             => [
             'slug'           => 'ctc-global-injector',
             'override_exact' => true,
             'first-path'     => 'options-general.php?page=ctc-global-injector',
@@ -50,7 +50,8 @@ function ctc_fs() {
                 'slug' => 'options-general.php',
             ],
         ],
-        'is_live'         => true,
+        'is_live'          => true,
+        'is_org_compliant' => true,
     ] );
     // Signal that SDK was initiated.
     do_action( 'ctc/freemius/loaded' );

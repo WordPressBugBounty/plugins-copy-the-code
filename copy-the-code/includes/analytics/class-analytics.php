@@ -8,7 +8,7 @@
  * @since 5.3.0
  */
 
-namespace CTC\Analytics;
+namespace CTC;
 
 use CTC\Helper;
 

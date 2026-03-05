@@ -145,6 +145,15 @@ class Rest {
 	 * @return \WP_REST_Response|\WP_Error
 	 */
 	public function track_event( $request ) {
+		// Basic abuse protection: per-IP rate limiting.
+		if ( $this->is_rate_limited( $request ) ) {
+			return new \WP_Error(
+				'ctc_analytics_rate_limited',
+				__( 'Too many analytics events from this client. Please slow down.', 'ctc' ),
+				[ 'status' => 429 ]
+			);
+		}
+
 		$data = $request->get_json_params();
 
 		$metadata       = isset( $data['metadata'] ) && is_array( $data['metadata'] ) ? $data['metadata'] : [];
@@ -167,6 +176,12 @@ class Rest {
 			'browser'        => isset( $data['browser'] ) ? sanitize_text_field( $data['browser'] ) : null,
 		];
 
+		// Validate payload schema and field lengths.
+		$validation_error = $this->validate_event_payload( $event_data );
+		if ( $validation_error ) {
+			return $validation_error;
+		}
+
 		$db       = Database::get();
 		$event_id = $db->insert_event( $event_data );
 
@@ -184,6 +199,141 @@ class Rest {
 				'event_id' => $event_id,
 			]
 		);
+	}
+
+	/**
+	 * Determine if the current request should be rate limited.
+	 *
+	 * Uses a simple per-IP counter over a short time window stored in a transient.
+	 *
+	 * @since 5.4.0
+	 * @param \WP_REST_Request $request Request object.
+	 * @return bool True when rate limit exceeded.
+	 */
+	private function is_rate_limited( $request ) {
+		$ip = $this->get_client_ip();
+
+		// If we cannot determine the IP, skip rate limiting rather than blocking.
+		if ( ! $ip ) {
+			return false;
+		}
+
+		$key          = 'ctc_analytics_rate_' . md5( $ip );
+		$window       = (int) apply_filters( 'ctc/analytics/rate_limit_window', 60 ); // seconds.
+		$max_requests = (int) apply_filters( 'ctc/analytics/rate_limit_max_requests', 60 ); // events per window.
+
+		$data = get_transient( $key );
+
+		$now = time();
+
+		if ( ! is_array( $data ) || ! isset( $data['count'], $data['expires_at'] ) || $data['expires_at'] <= $now ) {
+			// New window.
+			$data = [
+				'count'      => 1,
+				'expires_at' => $now + $window,
+			];
+			set_transient( $key, $data, $window );
+			return false;
+		}
+
+		if ( $data['count'] >= $max_requests ) {
+			return true;
+		}
+
+		$data['count']++;
+		set_transient( $key, $data, $data['expires_at'] - $now );
+
+		return false;
+	}
+
+	/**
+	 * Get best-effort client IP for rate limiting.
+	 *
+	 * @since 5.4.0
+	 * @return string Client IP or empty string on failure.
+	 */
+	private function get_client_ip() {
+		$ip = '';
+
+		if ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+			// If multiple IPs, take the first one.
+			$parts = explode( ',', sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) );
+			$ip    = trim( $parts[0] );
+		} elseif ( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {
+			$ip = sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) );
+		}
+
+		/**
+		 * Filter the IP used for analytics rate limiting.
+		 *
+		 * @since 5.4.0
+		 *
+		 * @param string $ip Client IP address.
+		 */
+		$ip = apply_filters( 'ctc/analytics/client_ip', $ip );
+
+		return $ip;
+	}
+
+	/**
+	 * Validate analytics event payload.
+	 *
+	 * Ensures types and maximum lengths to protect the database schema
+	 * and avoid obviously invalid data.
+	 *
+	 * @since 5.4.0
+	 * @param array $event_data Normalized event data.
+	 * @return \WP_Error|null
+	 */
+	private function validate_event_payload( array $event_data ) {
+		// rule_id must be null or positive integer.
+		if ( null !== $event_data['rule_id'] && ( ! is_int( $event_data['rule_id'] ) || $event_data['rule_id'] < 0 ) ) {
+			return new \WP_Error(
+				'ctc_analytics_invalid_rule_id',
+				__( 'Invalid rule ID for analytics event.', 'ctc' ),
+				[ 'status' => 400 ]
+			);
+		}
+
+		// Source bounded length.
+		if ( isset( $event_data['source'] ) && strlen( (string) $event_data['source'] ) > 64 ) {
+			return new \WP_Error(
+				'ctc_analytics_invalid_source',
+				__( 'Invalid analytics event source.', 'ctc' ),
+				[ 'status' => 400 ]
+			);
+		}
+
+		// Failure reason bounded length.
+		if ( isset( $event_data['failure_reason'] ) && strlen( (string) $event_data['failure_reason'] ) > 255 ) {
+			return new \WP_Error(
+				'ctc_analytics_invalid_failure_reason',
+				__( 'Failure reason is too long for analytics event.', 'ctc' ),
+				[ 'status' => 400 ]
+			);
+		}
+
+		// Device / browser bounded length.
+		foreach ( [ 'device', 'browser' ] as $field ) {
+			if ( isset( $event_data[ $field ] ) && strlen( (string) $event_data[ $field ] ) > 100 ) {
+				return new \WP_Error(
+					'ctc_analytics_invalid_' . $field,
+					__( 'Analytics event contains invalid user agent metadata.', 'ctc' ),
+					[ 'status' => 400 ]
+				);
+			}
+		}
+
+		// Page URL bounded length.
+		if ( isset( $event_data['page_url'] ) && strlen( (string) $event_data['page_url'] ) > 2048 ) {
+			return new \WP_Error(
+				'ctc_analytics_invalid_page_url',
+				__( 'Analytics event URL is too long.', 'ctc' ),
+				[ 'status' => 400 ]
+			);
+		}
+
+		return null;
 	}
 
 	/**

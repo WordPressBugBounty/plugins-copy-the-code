@@ -7,7 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'CTC' => $baseDir . '/includes/class-core.php',
-    'CTC\\Analytics\\Analytics' => $baseDir . '/includes/analytics/class-analytics.php',
+    'CTC\\Analytics' => $baseDir . '/includes/analytics/class-analytics.php',
     'CTC\\Analytics\\Database' => $baseDir . '/includes/analytics/class-database.php',
     'CTC\\Analytics\\Rest' => $baseDir . '/includes/analytics/class-rest.php',
     'CTC\\Base' => $baseDir . '/includes/class-base.php',

@@ -12,7 +12,7 @@ class ComposerStaticInit4e661db1292954d663b67440ef91fbe1
 
     public static $classMap = array (
         'CTC' => __DIR__ . '/../..' . '/includes/class-core.php',
-        'CTC\\Analytics\\Analytics' => __DIR__ . '/../..' . '/includes/analytics/class-analytics.php',
+        'CTC\\Analytics' => __DIR__ . '/../..' . '/includes/analytics/class-analytics.php',
         'CTC\\Analytics\\Database' => __DIR__ . '/../..' . '/includes/analytics/class-database.php',
         'CTC\\Analytics\\Rest' => __DIR__ . '/../..' . '/includes/analytics/class-rest.php',
         'CTC\\Base' => __DIR__ . '/../..' . '/includes/class-base.php',

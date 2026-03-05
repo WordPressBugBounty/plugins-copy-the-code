@@ -164,7 +164,7 @@ class Coupon extends Widget_Base {
             echo esc_url( $button_link['url'] );
             ?>" target="<?php 
             echo esc_attr( $link_target );
-            ?>" class="ctc-coupon-link"><?php 
+            ?>" rel="noopener noreferrer" class="ctc-coupon-link"><?php 
             echo esc_html( $slide_button_text );
             ?></a>
 					<?php 
@@ -173,11 +173,11 @@ class Coupon extends Widget_Base {
 
 					<?php 
         echo Helpers::get_copy_button( [
-            'as_raw'                  => 'no',
-            'copy_button_text'        => $button_text,
-            'copy_button_text_copied' => $button_text_copied,
-            'icon_direction'          => $icon_direction,
-            'show_icon'               => $show_icon,
+            'as_raw'             => 'no',
+            'button_text'        => $button_text,
+            'button_text_copied' => $button_text_copied,
+            'icon_direction'     => $icon_direction,
+            'show_icon'          => $show_icon,
         ] );
         ?>
 					<textarea class="ctc-copy-content" style="display: none;"><?php 

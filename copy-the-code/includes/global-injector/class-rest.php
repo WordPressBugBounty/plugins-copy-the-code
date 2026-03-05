@@ -436,7 +436,7 @@ class Rest {
 		// Helper function for getting meta with default value.
 		$get_meta = function ( $meta_key, $default_value ) use ( $id ) {
 			$value = get_post_meta( $id, $meta_key, true );
-			return ! empty( $value ) ? $value : $default_value;
+			return ( '' === $value || null === $value ) ? $default_value : $value;
 		};
 
 		// Helper function for getting style defaults.

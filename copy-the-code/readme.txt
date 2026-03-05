@@ -3,12 +3,12 @@ Contributors: clipboardagency, freemius
 Donate link: https://www.paypal.me/mwaghmare7/
 Tags: clipboard, copy, copy-to-clipboard, analytics, stats
 Tested up to: 6.9
-Stable tag: 5.3.1
+Stable tag: 5.4.0
 Requires PHP: 5.6
 Requires at least: 4.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
-Copy Anything to Clipboard is the #1 WordPress plugin Trusted by 10,000+ active websites with 325,538+ downloads 🚀. Add smart copy buttons with built-in analytics.
+Copy Anything to Clipboard is the #1 WordPress plugin Trusted by 10,000+ active websites with 335,624+ downloads 🚀. Add smart copy buttons with built-in analytics.
 
 == Description ==
 
@@ -320,6 +320,19 @@ This plugin provides 4 blocks for the WordPress block editor:
 * **Social Share** - Allow users to share content on social media.
 
 == Changelog ==
+
+= 5.4.0 =
+
+* **New: Shortcode analytics + per-shortcode opt-out** - Shortcode-based copy events are now tracked as `source = 'shortcode'` with post and page context, and you can disable tracking for specific shortcodes via an `analytics` attribute (for example, `[copy analytics=\"off\"]Code[/copy]` still copies but does not record analytics for that instance).
+* **Improvement: Version consistency & cache-busting** - Unified plugin version across the header, `CTC_VER` constant, core class, composer, and readme. Release tooling (`npm run version:check` / `version:set`) now fails on mismatches and keeps all version fields in sync, preventing stale assets and updater drift.
+* **Fix: Coupon widget copy button label** - The Elementor coupon widget now passes the correct config keys to the shared copy button helper, and the helper accepts both legacy (`copy_button_text`) and new (`button_text`) keys so the custom button text from widget settings always renders as expected.
+* **Fix: Preserve zero-valued style settings** - Global Injector rule meta now treats saved `'0'` values (e.g. blur, border width, padding) as valid instead of falling back to defaults, so zero-style configurations are applied consistently after saving.
+* **Security: Safer external links** - All plugin-generated links that open in a new tab (`target="_blank"`) now include `rel="noopener noreferrer"` to guard against reverse-tabnabbing and improve cross-window isolation.
+* **Security: Pro analytics limited to admins** - Pro analytics REST endpoints now require the `manage_options` capability, preventing non-admin users from accessing analytics data even if they obtain a valid REST nonce.
+* **Security: Analytics abuse protections** - The public analytics event endpoint (`POST /ctc/v1/analytics/events`) now enforces per-IP rate limiting and strict payload validation, returning `429` on abusive bursts and `400` for invalid event data to protect the `ctc_analytics` table.
+* **Improvement: Analytics timezone normalization** - Analytics events and query windows now consistently use UTC for `created_at` and date ranges, preventing shifted 24h/7d/30d boundaries on non-UTC sites.
+* **Improvement: Analytics retention & cleanup** - Older analytics events beyond roughly 13 months are now pruned in small batches by a daily scheduled cleanup job (retention days and batch size are filterable), keeping the `ctc_analytics` table fast while still supporting long-range comparisons.
+* **Fix: Emojis in code blocks now copied correctly** - WordPress renders emojis as `<img class="emoji">` elements; the copy logic now converts these to their `alt` text so emojis are included in the copied content. [Thanks @jayceezay](https://wordpress.org/support/topic/emojis-in-code-blocks-not-being-copied/)
 
 = 5.3.1 =
 

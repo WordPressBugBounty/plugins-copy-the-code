@@ -148,7 +148,7 @@ class Deal extends Widget_Base {
         echo esc_url( $button_link['url'] );
         ?>" target="<?php 
         echo esc_attr( $link_target );
-        ?>" class="ctc-deal-link"><?php 
+        ?>" rel="noopener noreferrer" class="ctc-deal-link"><?php 
         echo esc_html( $button_text );
         ?></a>
 				</div>

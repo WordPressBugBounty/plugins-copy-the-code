@@ -11,7 +11,7 @@ namespace CTC;
 use CTC\Dashboard;
 use CTC\Global_Injector;
 use CTC\Global_Injector\Main_Rule_List;
-use CTC\Analytics\Analytics;
+use CTC\Analytics;
 
 /**
  * Base

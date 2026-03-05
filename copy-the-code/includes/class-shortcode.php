@@ -107,6 +107,9 @@ class Shortcode {
 			'class'         => '',          // Additional CSS class.
 			'id'            => '',          // Custom ID.
 
+			// Analytics.
+			'analytics'     => '',          // Enable/disable analytics per shortcode: on|off, 1|0, true|false (default: on).
+
 			// Redirect: URL to open after copy (e.g. store page).
 			'redirect'      => '',          // Preferred: URL to open after copying.
 			'link'          => '',          // Backward compatibility: same as redirect.
@@ -275,6 +278,31 @@ class Shortcode {
 			$atts['link'] = $atts['redirect'];
 		}
 
+		// Analytics enabled flag.
+		$raw_analytics = isset( $atts['analytics'] ) ? strtolower( trim( (string) $atts['analytics'] ) ) : '';
+		$enabled       = true;
+
+		if ( '' !== $raw_analytics ) {
+			if ( in_array( $raw_analytics, [ '0', 'false', 'off', 'no', 'disabled' ], true ) ) {
+				$enabled = false;
+			} elseif ( in_array( $raw_analytics, [ '1', 'true', 'on', 'yes', 'enabled' ], true ) ) {
+				$enabled = true;
+			}
+		}
+
+		/**
+		 * Filter whether analytics should be enabled for this shortcode instance.
+		 *
+		 * @since 5.4.0
+		 *
+		 * @param bool  $enabled Whether analytics is enabled.
+		 * @param array $atts    Normalized shortcode attributes.
+		 * @param string $content Shortcode content.
+		 */
+		$enabled = (bool) apply_filters( 'ctc/shortcode/analytics_enabled', $enabled, $atts, $content );
+
+		$atts['analytics_enabled'] = $enabled;
+
 		return $atts;
 	}
 
@@ -401,6 +429,7 @@ class Shortcode {
 		<<?php echo esc_attr( $tag ); ?> 
 			id="<?php echo esc_attr( $id ); ?>"
 			class="<?php echo esc_attr( $css_class ); ?>"
+			data-ctc-analytics="<?php echo $atts['analytics_enabled'] ? '1' : '0'; ?>"
 			data-ctc-copy="<?php echo esc_attr( $atts['text'] ); ?>"
 			data-ctc-success="<?php echo esc_attr( $atts['success-text'] ); ?>"
 			data-ctc-format="<?php echo esc_attr( $atts['copy-as'] ); ?>"
@@ -499,6 +528,7 @@ class Shortcode {
 			id="<?php echo esc_attr( $id ); ?>"
 			class="ctc-shortcode ctc-shortcode--button<?php echo esc_attr( $custom_class ); ?>"
 			style="<?php echo esc_attr( $inline_styles ); ?>"
+			data-ctc-analytics="<?php echo $atts['analytics_enabled'] ? '1' : '0'; ?>"
 			data-ctc-copy="<?php echo esc_attr( $atts['text'] ); ?>"
 			data-ctc-success="<?php echo esc_attr( $config['text']['success_text'] ); ?>"
 			data-ctc-original="<?php echo esc_attr( $config['text']['button_text'] ); ?>"
@@ -571,6 +601,7 @@ class Shortcode {
 			id="<?php echo esc_attr( $id ); ?>"
 			class="ctc-shortcode ctc-shortcode--icon<?php echo esc_attr( $custom_class ); ?>"
 			style="<?php echo esc_attr( $inline_styles ); ?>"
+			data-ctc-analytics="<?php echo $atts['analytics_enabled'] ? '1' : '0'; ?>"
 			data-ctc-copy="<?php echo esc_attr( $atts['text'] ); ?>"
 			data-ctc-success="<?php echo esc_attr( $config['text']['success_text'] ); ?>"
 			data-ctc-tooltip="<?php echo esc_attr( $config['text']['tooltip_text'] ); ?>"
@@ -657,6 +688,7 @@ class Shortcode {
 			</div>
 			<div 
 				class="ctc-cover-overlay"
+				data-ctc-analytics="<?php echo $atts['analytics_enabled'] ? '1' : '0'; ?>"
 				data-ctc-copy="<?php echo esc_attr( $atts['text'] ); ?>"
 				data-ctc-success="<?php echo esc_attr( $config['text']['success_text'] ); ?>"
 				<?php if ( ! empty( $atts['target'] ) ) : ?>
@@ -754,10 +786,53 @@ class Shortcode {
 			true
 		);
 
+		// Localize shortcode frontend context for analytics tracking.
+		$localize_data = [
+			'eventsUrl' => rest_url( 'ctc/v1/analytics/events' ),
+			'postId'    => get_the_ID() ? get_the_ID() : null,
+			'postType'  => get_post_type() ? get_post_type() : null,
+			'pageUrl'   => $this->get_current_page_url(),
+		];
+		/**
+		 * Filter shortcode frontend localize data.
+		 *
+		 * Pro can use this to customize eventsUrl and add extra telemetry context.
+		 *
+		 * @since 5.4.0
+		 * @param array $data Localized data array.
+		 */
+		$localize_data = apply_filters( 'ctc/shortcode/localize_data', $localize_data );
+
+		wp_localize_script(
+			'ctc-shortcode',
+			'ctcShortcode',
+			$localize_data
+		);
+
 		// Enqueue inline CSS (only for presets used on the page, minified).
 		wp_register_style( 'ctc-shortcode', false, [], CTC_VER );
 		wp_enqueue_style( 'ctc-shortcode' );
 		wp_add_inline_style( 'ctc-shortcode', $this->get_inline_css() );
+	}
+
+	/**
+	 * Get the current page URL.
+	 *
+	 * @since 5.4.0
+	 * @return string Current page URL.
+	 */
+	private function get_current_page_url() {
+		if ( ! empty( $_SERVER['HTTP_HOST'] ) && ! empty( $_SERVER['REQUEST_URI'] ) ) {
+			$scheme = is_ssl() ? 'https://' : 'http://';
+			return esc_url_raw(
+				$scheme .
+				sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) .
+				sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) )
+			);
+		}
+
+		// Fallback to home URL if server vars are unavailable.
+		return esc_url_raw( home_url( '/' ) );
 	}
 
 	/**
@@ -1042,4 +1117,3 @@ table .ctc-cover-icon svg {
 ';
 	}
 }
-

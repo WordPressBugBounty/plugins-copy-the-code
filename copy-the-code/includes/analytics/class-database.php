@@ -50,6 +50,7 @@ class Database {
 	 * Constructor.
 	 */
 	private function __construct() {
+		add_action( 'ctc_analytics_cleanup', [ $this, 'cleanup_scheduled' ] );
 	}
 
 	/**
@@ -97,6 +98,81 @@ class Database {
 		) {$charset_collate};";
 
 		dbDelta( $sql );
+	}
+
+	/**
+	 * Scheduled cleanup callback for analytics events.
+	 *
+	 * @since 5.4.0
+	 * @return void
+	 */
+	public function cleanup_scheduled() {
+		$this->cleanup_old_events();
+	}
+
+	/**
+	 * Get analytics retention period in days.
+	 *
+	 * @since 5.4.0
+	 * @return int
+	 */
+	public function get_retention_days() {
+		$default_days = 395; // ~13 months.
+
+		/**
+		 * Filter analytics retention period in days.
+		 *
+		 * @since 5.4.0
+		 *
+		 * @param int $days Number of days to retain analytics events.
+		 */
+		$days = (int) apply_filters( 'ctc/analytics/retention_days', $default_days );
+
+		if ( $days <= 0 ) {
+			return $default_days;
+		}
+
+		return $days;
+	}
+
+	/**
+	 * Delete old analytics events beyond the retention period.
+	 *
+	 * Uses small batches to avoid long-running deletes on large tables.
+	 *
+	 * @since 5.4.0
+	 * @return void
+	 */
+	public function cleanup_old_events() {
+		global $wpdb;
+
+		$table_name = $this->get_table_name();
+		$days       = $this->get_retention_days();
+
+		// Compute cutoff date in UTC for the retention window.
+		$cutoff = Helper::mysql_date_ago( "-{$days} days" );
+
+		/**
+		 * Filter the batch size used when cleaning up analytics events.
+		 *
+		 * @since 5.4.0
+		 *
+		 * @param int $batch_size Number of rows to delete per batch.
+		 */
+		$batch_size = (int) apply_filters( 'ctc/analytics/cleanup_batch_size', 500 );
+		if ( $batch_size <= 0 ) {
+			$batch_size = 500;
+		}
+
+		do {
+			$deleted = $wpdb->query(
+				$wpdb->prepare(
+					"DELETE FROM {$table_name} WHERE created_at < %s LIMIT %d",
+					$cutoff,
+					$batch_size
+				)
+			);
+		} while ( $deleted && $deleted === $batch_size );
 	}
 
 	/**
@@ -171,7 +247,7 @@ class Database {
 			);
 		} else {
 			$sql = $wpdb->prepare(
-				"SELECT COUNT(*) FROM {$table_name} WHERE created_at >= %s AND created_at <= %s AND source = 'global-injector' AND success = 1",
+				"SELECT COUNT(*) FROM {$table_name} WHERE created_at >= %s AND created_at <= %s AND success = 1",
 				$date_from,
 				$date_to
 			);
