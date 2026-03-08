@@ -10,6 +10,8 @@
 
 namespace CTC;
 
+use CTC\Telemetry;
+
 /**
  * Updater Class
  *
@@ -109,6 +111,26 @@ class Updater {
 		// Update to 5.4.0: single analytics table ctc_analytics.
 		if ( version_compare( $from_version, '5.4.0', '<' ) ) {
 			$this->update_to_5_4_0();
+		}
+
+		// Update to 5.4.1: migrate legacy copy_the_code_allow_tracking to ctc_telemetry_opt_in.
+		if ( version_compare( $from_version, '5.4.1', '<' ) ) {
+			$this->update_to_5_4_1();
+		}
+	}
+
+	/**
+	 * Migrate legacy tracking opt-in to new telemetry opt-in (5.4.1).
+	 *
+	 * Users who had "Allow tracking" set to yes in v4.x (copy_the_code_allow_tracking)
+	 * are treated as opted in for ctc_telemetry_opt_in so we don't ask again.
+	 *
+	 * @since 5.4.1
+	 */
+	private function update_to_5_4_1() {
+		$legacy_allow = get_option( 'copy_the_code_allow_tracking', 'no' );
+		if ( 'yes' === $legacy_allow ) {
+			Telemetry::set_opt_in( true );
 		}
 	}
 

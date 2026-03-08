@@ -22,7 +22,7 @@ final class CTC {
      *
      * @var string
      */
-    public $version = '5.4.0';
+    public $version = '5.4.1';
 
     /**
      * The single instance of the class.
@@ -86,6 +86,7 @@ final class CTC {
         \CTC\Post_Types::get();
         \CTC\Updater::get();
         \CTC\Welcome::get();
+        \CTC\Telemetry::get();
         \CTC\Analytics\Database::get();
         \CTC\Global_Injector\Style_Presets::get();
         \CTC\Global_Injector\Rest::get();

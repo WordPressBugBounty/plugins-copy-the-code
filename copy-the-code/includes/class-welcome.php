@@ -133,15 +133,15 @@ class Welcome {
 		if ( $this->is_fresh_install() ) {
 			return [
 				'title'   => __( 'Copy Anything to Clipboard is ready', 'ctc' ),
-				'message' => __( 'Add copy buttons to code blocks, tables, and any content. Use Global Injector to set rules and styles with no coding.', 'ctc' ),
+				'message' => __( 'Add copy buttons to code blocks, tables, and any content with Global Injector. Optionally help improve the plugin by sharing anonymous usage data from this notice or Settings → Dashboard.', 'ctc' ),
 				'type'    => 'fresh',
 			];
 		}
 
-		// Upgrade message.
+		// Upgrade message (aligned with 5.4.1 changelog).
 		return [
 			'title'   => __( 'Copy Anything to Clipboard updated', 'ctc' ),
-			'message' => __( 'Global Injector is here: visual presets, display conditions, and live preview. Your existing settings have been preserved.', 'ctc' ),
+			'message' => __( 'Telemetry opt-in is now available from this notice and Settings → Dashboard. Pro: copy-by-source analytics and telemetry summary. Includes uninstall cleanup and a fix for Freemius loading.', 'ctc' ),
 			'type'    => 'upgrade',
 		];
 	}
@@ -171,6 +171,23 @@ class Welcome {
 						<strong><?php echo esc_html( $content['title'] ); ?></strong>
 					</p>
 					<p class="ctc-welcome-notice-message"><?php echo esc_html( $content['message'] ); ?></p>
+					<?php if ( ! Telemetry::get_opt_in() ) : ?>
+					<div class="ctc-welcome-telemetry-opt-in">
+						<label class="ctc-welcome-telemetry-label">
+							<input type="checkbox" name="ctc_telemetry_opt_in_checkbox" id="ctc-telemetry-opt-in-checkbox" value="1" />
+							<?php esc_html_e( 'Yes, help improve Copy Anything to Clipboard by sending anonymous usage data', 'ctc' ); ?>
+						</label>
+						<p class="ctc-welcome-telemetry-note">
+							<?php
+							printf(
+								/* translators: %s: URL to privacy documentation */
+								esc_html__( 'We collect environment info (WP, PHP, theme), feature usage, and error counts. No personal data. See our %s.', 'ctc' ),
+								'<a href="https://clipboard.agency/privacy-policy" target="_blank" rel="noopener noreferrer">' . esc_html__( 'privacy note', 'ctc' ) . '</a>'
+							);
+							?>
+						</p>
+					</div>
+					<?php endif; ?>
 					<p class="ctc-welcome-notice-actions">
 						<a href="<?php echo esc_url( $global_injector_url ); ?>" class="button button-primary">
 							<?php esc_html_e( 'Open Rules', 'ctc' ); ?>
@@ -243,6 +260,30 @@ class Welcome {
 				margin: 0 0 12px 0;
 				color: #50575e;
 			}
+			#ctc-welcome-notice .ctc-welcome-telemetry-opt-in {
+				margin: 12px 0;
+			}
+			#ctc-welcome-notice .ctc-welcome-telemetry-label {
+				display: flex;
+				align-items: flex-start;
+				gap: 8px;
+				cursor: pointer;
+				font-size: 13px;
+				color: #1d2327;
+			}
+			#ctc-welcome-notice .ctc-welcome-telemetry-label input {
+				margin-top: 2px;
+				flex-shrink: 0;
+			}
+			#ctc-welcome-notice .ctc-welcome-telemetry-note {
+				margin: 4px 0 0 27px;
+				font-size: 12px;
+				color: #646970;
+				line-height: 1.4;
+			}
+			#ctc-welcome-notice .ctc-welcome-telemetry-note a {
+				color: #2271b1;
+			}
 			#ctc-welcome-notice .ctc-welcome-notice-actions {
 				display: flex;
 				align-items: center;
@@ -271,18 +312,48 @@ class Welcome {
 
 		wp_add_inline_style( 'wp-admin', $styles );
 
-		// Inline script for handling dismissal.
-		$script = "
+		// Inline script for handling dismissal, Get Started, and checkbox opt-in.
+		$dismiss_nonce = wp_create_nonce( 'ctc_dismiss_welcome_notice' );
+		$opt_in_nonce  = wp_create_nonce( 'ctc_telemetry_opt_in' );
+		$script        = "
 			jQuery(document).ready(function($) {
-				$('#ctc-welcome-notice').on('click', '.notice-dismiss', function() {
+				function getOptIn() {
+					return $('#ctc-telemetry-opt-in-checkbox').is(':checked') ? '1' : '0';
+				}
+				function updateOptIn(callback) {
+					$.ajax({
+						url: ajaxurl,
+						type: 'POST',
+						data: {
+							action: 'ctc_update_telemetry_opt_in',
+							nonce: '" . esc_js( $opt_in_nonce ) . "',
+							opt_in: getOptIn()
+						}
+					}).always(function() { if (callback) callback(); });
+				}
+				function dismissNotice(callback) {
 					$.ajax({
 						url: ajaxurl,
 						type: 'POST',
 						data: {
 							action: 'ctc_dismiss_welcome_notice',
-							nonce: '" . wp_create_nonce( 'ctc_dismiss_welcome_notice' ) . "'
+							nonce: '" . esc_js( $dismiss_nonce ) . "',
+							telemetry_opt_in: getOptIn()
 						}
-					});
+					}).always(function() { if (callback) callback(); });
+				}
+				$('#ctc-telemetry-opt-in-checkbox').on('change', function() {
+					updateOptIn();
+				});
+				$('#ctc-welcome-notice').on('click', '.notice-dismiss', function() {
+					dismissNotice();
+				});
+				$('#ctc-welcome-notice .ctc-welcome-notice-actions .button-primary').on('click', function(e) {
+					var href = $(this).attr('href');
+					if (href) {
+						e.preventDefault();
+						dismissNotice(function() { window.location.href = href; });
+					}
 				});
 			});
 		";
@@ -304,6 +375,19 @@ class Welcome {
 		// Check permissions.
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( 'Insufficient permissions' );
+		}
+
+		// Save telemetry opt-in (default opt-out if not explicitly set).
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Nonce verified above.
+		$opt_in = isset( $_POST['telemetry_opt_in'] ) && '1' === sanitize_text_field( wp_unslash( $_POST['telemetry_opt_in'] ) );
+		Telemetry::set_opt_in( $opt_in );
+
+		$telemetry = Telemetry::get();
+		if ( $opt_in ) {
+			$telemetry->maybe_send();
+			$telemetry->schedule_cron();
+		} else {
+			$telemetry->unschedule_cron();
 		}
 
 		// Mark as dismissed.

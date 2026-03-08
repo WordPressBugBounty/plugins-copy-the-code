@@ -240,7 +240,7 @@ class Rest {
 			return true;
 		}
 
-		$data['count']++;
+		++$data['count'];
 		set_transient( $key, $data, $data['expires_at'] - $now );
 
 		return false;

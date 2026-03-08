@@ -259,6 +259,40 @@ class Database {
 	}
 
 	/**
+	 * Get total successful copy count by source (e.g. global-injector, shortcode) in date range.
+	 *
+	 * @since 5.4.0
+	 * @param string $date_from Start date (Y-m-d H:i:s).
+	 * @param string $date_to   End date (Y-m-d H:i:s).
+	 * @return array<string, int> Map of source => count (e.g. [ 'global-injector' => 100, 'shortcode' => 50 ]).
+	 */
+	public function get_total_copies_by_source( $date_from, $date_to ) {
+		global $wpdb;
+
+		$table_name = $this->get_table_name();
+
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT source, COUNT(*) as cnt FROM {$table_name}
+				WHERE created_at >= %s AND created_at <= %s AND success = 1 AND source != ''
+				GROUP BY source",
+				$date_from,
+				$date_to
+			),
+			ARRAY_A
+		);
+
+		$by_source = [];
+		if ( is_array( $results ) ) {
+			foreach ( $results as $row ) {
+				$src               = isset( $row['source'] ) ? sanitize_key( $row['source'] ) : 'global-injector';
+				$by_source[ $src ] = (int) ( $row['cnt'] ?? 0 );
+			}
+		}
+		return $by_source;
+	}
+
+	/**
 	 * Get rule-specific stats (for main-rule-list activity column).
 	 *
 	 * @since 5.3.0

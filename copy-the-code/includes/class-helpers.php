@@ -63,17 +63,17 @@ class Helpers {
 	}
 
 	public static function get_copy_button( $args = [] ) {
-		$show_icon      = isset( $args['show_icon'] ) ? $args['show_icon'] : 'yes';
-		$with_icon      = 'yes' === $show_icon ? 'with-icon' : 'without-icon';
-		$as_raw         = isset( $args['as_raw'] ) ? 'yes' : '';
-		$button_text    = isset( $args['button_text'] )
+		$show_icon          = isset( $args['show_icon'] ) ? $args['show_icon'] : 'yes';
+		$with_icon          = 'yes' === $show_icon ? 'with-icon' : 'without-icon';
+		$as_raw             = isset( $args['as_raw'] ) ? 'yes' : '';
+		$button_text        = isset( $args['button_text'] )
 			? $args['button_text']
 			: ( isset( $args['copy_button_text'] ) ? $args['copy_button_text'] : esc_html__( 'Copy to Clipboard', 'ctc' ) );
-		$button_class   = isset( $args['button_class'] ) ? $args['button_class'] : '';
+		$button_class       = isset( $args['button_class'] ) ? $args['button_class'] : '';
 		$button_text_copied = isset( $args['button_text_copied'] )
 			? $args['button_text_copied']
 			: ( isset( $args['copy_button_text_copied'] ) ? $args['copy_button_text_copied'] : esc_html__( 'Copied!', 'ctc' ) );
-		$icon_direction = isset( $args['icon_direction'] ) ? $args['icon_direction'] : 'before';
+		$icon_direction     = isset( $args['icon_direction'] ) ? $args['icon_direction'] : 'before';
 
 		ob_start();
 		?>

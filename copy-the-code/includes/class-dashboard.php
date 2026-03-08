@@ -10,6 +10,7 @@ namespace CTC;
 
 use CTC\Global_Injector;
 use CTC\Helper;
+use CTC\Telemetry;
 
 /**
  * Dashboard class.
@@ -76,6 +77,7 @@ class Dashboard {
 			'ctc-dashboard',
 			CTC_URI . 'assets/admin/js/dashboard.js',
 			[
+				'wp-api-fetch',
 				'wp-element',
 				'wp-i18n',
 				'jquery',
@@ -99,13 +101,15 @@ class Dashboard {
 			'ctc-dashboard',
 			'CTCDashboard',
 			[
-				'isPro'       => Helper::is_pro(),
-				'rulesCount'  => count( $rules ),
-				'activeCount' => $active_count,
-				'pausedCount' => $paused_count,
-				'version'     => CTC_VER,
-				'recentRules' => $recent_rules,
-				'urls'        => [
+				'isPro'          => Helper::is_pro(),
+				'rulesCount'     => count( $rules ),
+				'activeCount'    => $active_count,
+				'pausedCount'    => $paused_count,
+				'version'        => CTC_VER,
+				'recentRules'    => $recent_rules,
+				'telemetryOptIn' => Telemetry::get_opt_in(),
+				'telemetryNonce' => wp_create_nonce( 'ctc_telemetry_opt_in' ),
+				'urls'           => [
 					'rules'          => admin_url( 'options-general.php?page=ctc-rules' ),
 					'addNew'         => admin_url( 'options-general.php?page=ctc-global-injector' ),
 					'docs'           => 'https://docs.clipboard.agency/',

@@ -49,6 +49,7 @@ return array(
     'CTC\\Helpers' => $baseDir . '/includes/class-helpers.php',
     'CTC\\Post_Types' => $baseDir . '/includes/class-post-types.php',
     'CTC\\Shortcode' => $baseDir . '/includes/class-shortcode.php',
+    'CTC\\Telemetry' => $baseDir . '/includes/telemetry/class-telemetry.php',
     'CTC\\Updater' => $baseDir . '/includes/class-updater.php',
     'CTC\\Welcome' => $baseDir . '/includes/class-welcome.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',

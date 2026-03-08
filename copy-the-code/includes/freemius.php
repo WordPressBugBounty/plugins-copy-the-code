@@ -5,9 +5,7 @@
  *
  * @package CTC
  */
-if ( function_exists( 'ctc_fs' ) ) {
-    return;
-}
+use CTC\Telemetry;
 /**
  * Create a helper function for easy SDK access.
  *
@@ -76,6 +74,34 @@ function ctc_fs_init() {
     $fs->add_filter( 'after_connect_url', 'ctc_fs_settings_url' );
     // @phpstan-ignore-next-line
     $fs->add_filter( 'after_pending_connect_url', 'ctc_fs_settings_url' );
+    // @phpstan-ignore-next-line
+    $fs->add_filter( 'after_pending_connect_url', 'ctc_enable_telemetry' );
+    // Clean up telemetry options when user uninstalls (Freemius runs this via after_uninstall).
+    // Do not add uninstall.php in plugin root — Freemius requires it absent to track uninstall feedback.
+    $fs->add_action( 'after_uninstall', 'ctc_cleanup_on_uninstall' );
+}
+
+/**
+ * Enable telemetry.
+ */
+function ctc_enable_telemetry() {
+    Telemetry::set_opt_in( true );
+    Telemetry::maybe_send();
+    Telemetry::schedule_cron();
+    return ctc_fs_settings_url();
+}
+
+/**
+ * Clean up plugin options on uninstall (called by Freemius after_uninstall hook).
+ *
+ * Install identity is domain-based (no stored install id), so reinstall on same domain keeps the same id.
+ */
+function ctc_cleanup_on_uninstall() {
+    delete_option( 'ctc_telemetry_opt_in' );
+    delete_option( 'ctc_telemetry_first_seen' );
+    delete_option( 'ctc_telemetry_last_sent' );
+    delete_option( 'ctc_install_id' );
+    wp_clear_scheduled_hook( 'ctc_telemetry_weekly_send' );
 }
 
 /**
