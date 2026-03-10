@@ -22,7 +22,7 @@ final class CTC {
      *
      * @var string
      */
-    public $version = '5.4.1';
+    public $version = '5.5.0';
 
     /**
      * The single instance of the class.

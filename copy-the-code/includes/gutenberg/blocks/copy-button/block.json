@@ -24,9 +24,5 @@
 	"category": "ctc-blocks",
 	"textdomain": "ctc",
 	"style": "file:./css/style.css",
-	"editorScript": "file:./js/index.js",
-	"script": [
-		"jquery",
-		"file:./js/frontend.js"
-	]
+	"editorScript": "file:./js/index.js"
 }

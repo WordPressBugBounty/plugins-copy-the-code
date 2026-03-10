@@ -3,7 +3,7 @@ Contributors: clipboardagency, freemius
 Donate link: https://www.paypal.me/mwaghmare7/
 Tags: copy to clipboard, copy button, copy text, copy code, clipboard
 Tested up to: 6.9
-Stable tag: 5.4.1
+Stable tag: 5.5.0
 Requires PHP: 5.6
 Requires at least: 4.4
 License: GPLv2 or later
@@ -553,6 +553,12 @@ Display the title of the current taxonomy term such as category or tag.
 Allow visitors to quickly share content across social media platforms.
 
 == Changelog ==
+
+= 5.5.0 =
+
+* **New: Gutenberg block analytics (Pro)** - Copy events from all Gutenberg copy blocks (Copy to Clipboard Icon, Copy Icon, and Copy Button) are now tracked as `source = 'gutenberg-block'` in the same analytics table. Pro Analytics dashboard shows a three-way source breakdown (Global Injector, Shortcodes, Gutenberg Blocks) and a Block by page view so you can see which pages drive the most Gutenberg block copy events.
+* **Improvement: Gutenberg block tracking** - Gutenberg copy block output includes `data-ctc-analytics` and `data-ctc-source="gutenberg-block"`; frontend sends analytics to `POST /ctc/v1/analytics/events` after each copy (non-blocking). Block scripts and styles still load only when the relevant block is present on the page.
+* **Fix: Icon block frontend scripts only load when block is present** - Icon block (Copy to Clipboard) styles and copy script are now enqueued only on pages that contain the Icon block, using `has_block( 'copy-the-code/icon' )`. This avoids loading assets on every page and improves performance when the block is not used.
 
 = 5.4.1 =
 

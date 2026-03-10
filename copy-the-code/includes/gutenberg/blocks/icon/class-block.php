@@ -47,6 +47,8 @@ class Icon {
 
 	/**
 	 * Enqueue editor-only assets (block registration JS).
+	 *
+	 * Styles for this block are registered via block.json (style/editorStyle).
 	 */
 	public function enqueue_editor_assets() {
 		wp_enqueue_script(
@@ -60,21 +62,42 @@ class Icon {
 
 	/**
 	 * Enqueue frontend assets (styles and copy functionality).
+	 * Only enqueues when the Icon block is present in the current post/content.
 	 */
 	public function enqueue_frontend_assets() {
-		wp_enqueue_style(
-			'ctc-gb-icon',
-			CTC_GUTENBERG_URI . 'blocks/icon/css/style.css',
-			[],
-			CTC_VER,
-			'all'
-		);
-
-		// Core copy functionality - only on frontend when block is used.
-		if ( ! is_admin() ) {
-			wp_enqueue_script( 'ctc-core', CTC_URI . 'includes/assets/js/core.js', [ 'jquery' ], CTC_VER, true );
-			wp_enqueue_script( 'ctc-lib-core', CTC_URI . 'assets/frontend/js/lib/ctc.js', [ 'jquery' ], CTC_VER, true );
+		if ( is_admin() ) {
+			return;
 		}
+		if ( ! $this->current_content_has_icon_block() ) {
+			return;
+		}
+
+		wp_enqueue_script( 'ctc-lib-core', CTC_URI . 'assets/frontend/js/lib/ctc.js', [ 'jquery' ], CTC_VER, true );
+		wp_enqueue_script( 'ctc-core', CTC_URI . 'includes/assets/js/core.js', [ 'ctc-lib-core' ], CTC_VER, true );
+
+		$post = get_post();
+		wp_localize_script(
+			'ctc-core',
+			'ctcBlockAnalytics',
+			[
+				'eventsUrl' => rest_url( 'ctc/v1/analytics/events' ),
+				'postId'    => $post instanceof \WP_Post ? $post->ID : null,
+				'postType'  => $post instanceof \WP_Post ? $post->post_type : null,
+			]
+		);
+	}
+
+	/**
+	 * Whether the current queried post (or global post) contains the Icon block.
+	 *
+	 * @return bool
+	 */
+	private function current_content_has_icon_block() {
+		$post = get_post();
+		if ( ! $post instanceof \WP_Post ) {
+			return false;
+		}
+		return has_block( 'copy-the-code/icon', $post );
 	}
 
 	/**
@@ -101,7 +124,7 @@ class Icon {
 		$copy_content = isset( $attributes['content'] ) ? $attributes['content'] : '';
 		ob_start();
 		?>
-		<div class="ctc-block ctc-copy-icon" style="text-align: <?php echo esc_attr( $alignment ); ?>">
+		<div class="ctc-block ctc-copy-icon" data-ctc-analytics="1" data-ctc-source="gutenberg-block" data-ctc-block-type="copy-the-code/icon" style="text-align: <?php echo esc_attr( $alignment ); ?>">
 			<span copy-as-raw="yes" class="ctc-block-copy ctc-block-copy-icon" role="button" aria-label="Copied">
 				<?php echo Helpers::get_svg_copy_icon(); // phpcs:ignore ?>
 				<?php echo Helpers::get_svg_checked_icon(); // phpcs:ignore ?>
