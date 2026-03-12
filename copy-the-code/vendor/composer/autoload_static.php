@@ -55,6 +55,8 @@ class ComposerStaticInit4e661db1292954d663b67440ef91fbe1
         'CTC\\Post_Types' => __DIR__ . '/../..' . '/includes/class-post-types.php',
         'CTC\\Shortcode' => __DIR__ . '/../..' . '/includes/class-shortcode.php',
         'CTC\\Telemetry' => __DIR__ . '/../..' . '/includes/telemetry/class-telemetry.php',
+        'CTC\\ThirdParty\\Supsystic_Tables' => __DIR__ . '/../..' . '/includes/third-party/class-supsystic-tables.php',
+        'CTC\\ThirdParty\\WPDataTables' => __DIR__ . '/../..' . '/includes/third-party/class-wpdatatables.php',
         'CTC\\Updater' => __DIR__ . '/../..' . '/includes/class-updater.php',
         'CTC\\Welcome' => __DIR__ . '/../..' . '/includes/class-welcome.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',

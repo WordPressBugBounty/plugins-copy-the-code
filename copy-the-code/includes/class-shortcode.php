@@ -761,12 +761,44 @@ class Shortcode {
 	}
 
 	/**
-	 * Maybe enqueue assets if shortcode was used.
+	 * Whether the current page may contain [copy] output (direct shortcode or via container shortcodes like tables).
+	 * Used so we enqueue assets when [copy] appears inside Supsystic/wpDataTables etc., including when table HTML is cached.
+	 *
+	 * @return bool
+	 */
+	private function page_may_contain_copy_output() {
+		if ( $this->styles_enqueued ) {
+			return true;
+		}
+		$post = get_post();
+		if ( ! $post || ! is_singular() || empty( $post->post_content ) ) {
+			return false;
+		}
+		// Built-in list is empty; third-party integrations add their shortcodes via filter when plugins are active.
+		$container_shortcodes = [];
+		/**
+		 * Shortcodes that may output [copy] / [copy_inline] in their rendered content (e.g. table cell data).
+		 * When present in post content, we enqueue copy assets so buttons work even if that content is cached.
+		 * Third-party classes (e.g. CTC\ThirdParty\Supsystic_Tables) add to this when their plugin is active.
+		 *
+		 * @param string[] $container_shortcodes List of shortcode names.
+		 */
+		$container_shortcodes = apply_filters( 'ctc/shortcode/container_shortcodes', $container_shortcodes );
+		foreach ( $container_shortcodes as $tag ) {
+			if ( has_shortcode( $post->post_content, $tag ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Maybe enqueue assets if shortcode was used or page may contain copy output (e.g. inside table plugins).
 	 *
 	 * @return void
 	 */
 	public function maybe_enqueue_assets() {
-		if ( ! $this->styles_enqueued ) {
+		if ( ! $this->page_may_contain_copy_output() ) {
 			return;
 		}
 
@@ -808,6 +840,11 @@ class Shortcode {
 			'ctcShortcode',
 			$localize_data
 		);
+
+		// When enqueueing for container shortcodes only (e.g. table cached), include all preset CSS.
+		if ( ! $this->styles_enqueued ) {
+			$this->used_presets = array_fill_keys( [ 'inline', 'button', 'icon', 'cover', 'native' ], true );
+		}
 
 		// Enqueue inline CSS (only for presets used on the page, minified).
 		wp_register_style( 'ctc-shortcode', false, [], CTC_VER );

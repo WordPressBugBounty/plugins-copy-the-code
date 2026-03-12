@@ -3,7 +3,7 @@ Contributors: clipboardagency, freemius
 Donate link: https://www.paypal.me/mwaghmare7/
 Tags: copy to clipboard, copy button, copy text, copy code, clipboard
 Tested up to: 6.9
-Stable tag: 5.5.0
+Stable tag: 5.5.1
 Requires PHP: 5.6
 Requires at least: 4.4
 License: GPLv2 or later
@@ -554,10 +554,21 @@ Allow visitors to quickly share content across social media platforms.
 
 == Changelog ==
 
+= 5.5.1 =
+
+* **Fix: Highlight.js / code block copy formatting** – Copy buttons added via Global Injector to `pre` and `code` blocks (including themes using Highlight.js, such as the setup on zanglikun.com) now preserve indentation and whitespace when copying, so Java / PHP / shell snippets paste exactly as shown instead of being flattened into a single left-aligned block. Thanks to Likun Zang for reporting the issue.
+* **Fix: [copy] shortcode in table cells** – `[copy]` and `[copy_inline]` inside table plugins (Data Tables Generator by Supsystic, wpDataTables) now work correctly. Copy script and styles load when the table shortcode is on the page, and copy buttons work with cached or dynamically rendered table content. Thanks to [@jayceezay](https://wordpress.org/support/users/jayceezay/) for reporting. See: https://wordpress.org/support/topic/copy-shortcode-in-table-cells-not-working-anymore/
+* **Fix: Thrive Architect HTML block integration** – Copy buttons rendered inside a Thrive Architect HTML block (for example, custom blockquotes with `ctc-wrapper` markup) are now reliably detected and bound by the frontend script, so clicking the button correctly copies the content even when the HTML is pre-rendered or cached.
+* **Improvement: Shortcode copy buttons (event delegation)** – Copy buttons from `[copy]` shortcodes now use document-level event delegation, so buttons added dynamically (e.g. by table plugins after page load) remain clickable.
+* **Improvement: Code / pre support in Global Injector** – Global Injector rules targeting `pre` / `code` elements now integrate more safely with external highlighters and pre-rendered content, ensuring the “Copy Anything to Clipboard” behavior stays consistent without breaking existing theme or page builder output.
+
 = 5.5.0 =
 
 * **New: Gutenberg block analytics (Pro)** - Copy events from all Gutenberg copy blocks (Copy to Clipboard Icon, Copy Icon, and Copy Button) are now tracked as `source = 'gutenberg-block'` in the same analytics table. Pro Analytics dashboard shows a three-way source breakdown (Global Injector, Shortcodes, Gutenberg Blocks) and a Block by page view so you can see which pages drive the most Gutenberg block copy events.
 * **Improvement: Gutenberg block tracking** - Gutenberg copy block output includes `data-ctc-analytics` and `data-ctc-source="gutenberg-block"`; frontend sends analytics to `POST /ctc/v1/analytics/events` after each copy (non-blocking). Block scripts and styles still load only when the relevant block is present on the page.
+
+= 5.4.2 =
+
 * **Fix: Icon block frontend scripts only load when block is present** - Icon block (Copy to Clipboard) styles and copy script are now enqueued only on pages that contain the Icon block, using `has_block( 'copy-the-code/icon' )`. This avoids loading assets on every page and improves performance when the block is not used.
 
 = 5.4.1 =

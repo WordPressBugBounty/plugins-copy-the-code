@@ -50,6 +50,8 @@ return array(
     'CTC\\Post_Types' => $baseDir . '/includes/class-post-types.php',
     'CTC\\Shortcode' => $baseDir . '/includes/class-shortcode.php',
     'CTC\\Telemetry' => $baseDir . '/includes/telemetry/class-telemetry.php',
+    'CTC\\ThirdParty\\Supsystic_Tables' => $baseDir . '/includes/third-party/class-supsystic-tables.php',
+    'CTC\\ThirdParty\\WPDataTables' => $baseDir . '/includes/third-party/class-wpdatatables.php',
     'CTC\\Updater' => $baseDir . '/includes/class-updater.php',
     'CTC\\Welcome' => $baseDir . '/includes/class-welcome.php',
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',

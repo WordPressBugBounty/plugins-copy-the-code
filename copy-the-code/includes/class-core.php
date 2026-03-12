@@ -22,7 +22,7 @@ final class CTC {
      *
      * @var string
      */
-    public $version = '5.5.0';
+    public $version = '5.5.1';
 
     /**
      * The single instance of the class.
@@ -67,6 +67,7 @@ final class CTC {
      * @since 5.1.0
      */
     public function init() {
+        $this->init_third_party();
         $this->initialize();
         do_action( 'ctc/loaded' );
     }
@@ -76,6 +77,26 @@ final class CTC {
      */
     private function includes() {
         include CTC_DIR . 'vendor/autoload.php';
+    }
+
+    /**
+     * Load third-party integrations when their plugins are active.
+     *
+     * Each integration registers container shortcodes so [copy] inside their output
+     * (e.g. table cells) triggers script enqueue and works with cached/dynamic content.
+     *
+     * @since 5.5.1
+     */
+    private function init_third_party() {
+        if ( !function_exists( 'is_plugin_active' ) ) {
+            require_once ABSPATH . 'wp-admin/includes/plugin.php';
+        }
+        if ( is_plugin_active( 'data-tables-generator-by-supsystic/index.php' ) ) {
+            new \CTC\ThirdParty\Supsystic_Tables();
+        }
+        if ( is_plugin_active( 'wpdatatables/wpdatatables.php' ) ) {
+            new \CTC\ThirdParty\WPDataTables();
+        }
     }
 
     /**
