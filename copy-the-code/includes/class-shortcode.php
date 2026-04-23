@@ -2,8 +2,8 @@
 /**
  * Unified Shortcode Handler
  *
- * Provides `[copy]` shortcode with design presets (button, icon, inline, cover).
- * Also provides backward-compatible `[copy_inline]` shortcode.
+ * Provides `[copy]` (and `[ctc]` alias) with design presets: button, icon, inline, cover.
+ * Default preset is **inline**. Legacy `[copy_inline]` still registers for old content but is not recommended for new sites—use `[copy]` instead.
  *
  * Reuses the same styles and JS from Global Injector for consistency.
  *
@@ -172,9 +172,9 @@ class Shortcode {
 	}
 
 	/**
-	 * Render [copy_inline] shortcode (backward compatible).
+	 * Render legacy `[copy_inline]` shortcode (backward compatible).
 	 *
-	 * Maps to [copy preset="inline"].
+	 * Maps to `[copy]` with the inline preset. Prefer `[copy]` in new content.
 	 *
 	 * @param array  $atts    Shortcode attributes.
 	 * @param string $content Shortcode content.
@@ -302,6 +302,16 @@ class Shortcode {
 		$enabled = (bool) apply_filters( 'ctc/shortcode/analytics_enabled', $enabled, $atts, $content );
 
 		$atts['analytics_enabled'] = $enabled;
+
+		// Set display when shortcode content is present.
+		if ( $content && empty( $atts['display'] ) ) {
+			$atts['display'] = $content;
+		}
+
+		// Set display when content attribute exists and content exists.
+		if ( $atts['content'] && $content ) {
+			$atts['display'] = $content;
+		}
 
 		return $atts;
 	}
@@ -777,7 +787,7 @@ class Shortcode {
 		// Built-in list is empty; third-party integrations add their shortcodes via filter when plugins are active.
 		$container_shortcodes = [];
 		/**
-		 * Shortcodes that may output [copy] / [copy_inline] in their rendered content (e.g. table cell data).
+		 * Shortcodes that may output `[copy]` in their rendered content (e.g. table cell data).
 		 * When present in post content, we enqueue copy assets so buttons work even if that content is cached.
 		 * Third-party classes (e.g. CTC\ThirdParty\Supsystic_Tables) add to this when their plugin is active.
 		 *

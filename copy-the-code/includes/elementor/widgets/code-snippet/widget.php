@@ -260,7 +260,7 @@ class CodeSnippet extends Widget_Base {
             ?>
 					<div class='ctc-code-snippet-file-name'>
 						<?php 
-            echo do_shortcode( '[copy_inline text="' . esc_html( $file_name ) . '"]' );
+            echo do_shortcode( '[copy]' . esc_html( $file_name ) . '[/copy]' );
             ?>
 					</div>
 				<?php 

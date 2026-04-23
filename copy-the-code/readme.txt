@@ -1,67 +1,207 @@
 === Copy Anything to Clipboard for WordPress – Copy Button, Copy Text & Copy Code ===
 Contributors: clipboardagency, freemius
 Donate link: https://www.paypal.me/mwaghmare7/
-Tags: copy to clipboard, copy button, copy text, copy code, clipboard
+Tags: clipboard, copy to clipboard, copy code, elementor, shortcode
 Tested up to: 6.9
-Stable tag: 5.5.1
+Stable tag: 5.5.2
 Requires PHP: 5.6
 Requires at least: 4.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Copy Anything to Clipboard is the #1 WordPress copy-to-clipboard plugin trusted by 10,000+ active websites with 342,151+ downloads 🚀. Instantly add smart copy buttons to text, code, coupon codes, links, prompts, emails, or any content with built-in analytics and powerful Global Injector controls.
+Copy Anything to Clipboard is the #1 WordPress copy-to-clipboard plugin trusted by 10,000+ active websites with 352,151+ downloads 🚀. Instantly add smart copy buttons to text, code, coupon codes, links, prompts, emails, or any content with built-in analytics and powerful Global Injector controls.
 
 == Description ==
 
-**Copy Anything to Clipboard** is a powerful **WordPress copy to clipboard plugin** that lets visitors copy text, links, coupon codes, code snippets, email addresses, commands, prompts, or any content with a single click.
+**Copy Anything to Clipboard** helps visitors copy **text, links, coupon codes, commands, email addresses, AI prompts, and code snippets** in one click—no awkward text selection on mobile, no broken formatting in the clipboard.
 
-Add smart **copy buttons anywhere on your WordPress website** and allow users to instantly copy content without manually selecting text. Perfect for blogs, documentation sites, coupon websites, SaaS tools, AI prompt libraries, developer tutorials, and marketing pages.
+Use it on **blogs, docs, WooCommerce and deal sites, SaaS landing pages, tutorials, and support hubs** where you want fewer “how do I copy this?” questions and smoother sharing of URLs, promos, and technical steps.
 
-Whether you want to add a **copy button to code blocks**, allow users to **copy coupon codes**, share **ChatGPT prompts**, copy **email addresses**, or let visitors quickly grab **links, commands, or contact details**, this plugin makes copying content simple and user-friendly.
+**Why site owners install it**
 
-This flexible copy-to-clipboard plugin offers multiple integration methods including **automatic CSS selector targeting, shortcodes, Gutenberg blocks, and Elementor widgets**. Easily add copy buttons to code blocks, blockquotes, coupon codes, deals, contact information, and more.
+* **Better UX** – Especially on touch devices, a dedicated copy control beats “long-press to select.”
+* **Higher intent actions** – Coupon codes, affiliate links, and checkout snippets convert better when copying is frictionless.
+* **Flexible placement** – Target elements automatically, or drop shortcodes/blocks only where you need them.
+
+**Integration options**
+
+* **Global Injector** – Rules that match **CSS selectors** (e.g. `pre`, `code`, `.coupon`) plus **display conditions** and live preview.
+* **Classic CSS selector rules** – Site-wide automatic copy buttons for matching markup.
+* **Shortcodes** – `[copy]` (alias: `[ctc]`) for precise placement in the editor, widgets, and templates.
+* **Elementor** – 25+ widgets for common patterns (code, coupon, email, prompt, deal link, and more).
+* **Gutenberg** – Native blocks for the block editor.
+
+**Highlights**
+
+* **Button, Icon, and Cover** presets; copy as **plain text** or **HTML** where supported.
+* **Performance-minded** – Combine display conditions with how you publish rules so assets run where copy UI is actually used.
+* **Works with typical WordPress stacks** – Themes, builders, and caching setups; mobile and modern desktop browsers.
 
 ---
 
-**Key Features**
-
-- **NEW: Global Injector** – Automatically inject copy buttons anywhere using CSS selectors with advanced display conditions
-- **One-click copy to clipboard** functionality for any content
-- **Automatic copy buttons for CSS selectors** (`pre`, `blockquote`, `code`, etc.)
-- **Shortcode support** – `[copy]` and `[copy_inline]` with flexible attributes
-- **Elementor widgets** for 25+ content types
-- **Gutenberg blocks** for modern block-based WordPress sites
-- **Smart display conditions** – load assets only on selected pages
-- **Mobile-friendly and cross-browser compatible**
-- **Lightweight and SEO-friendly**
-- **Customizable copy button styles** (Button, Icon, Cover) and positions
-- **Copy as HTML or plain text**
-- **Works with all WordPress themes and plugins**
-
----
-
-Perfect for **bloggers, developers, e-commerce stores, educational platforms, documentation websites, and marketing pages** that want to make copying content fast and effortless. 📋
-
-== How to Use ==
+=== How to use ===
 
 You can add copy buttons anywhere on your WordPress site using one of the following methods:
 
-1. **NEW: [Global Injector](https://docs.clipboard.agency/guides/global-injector/)**  
-   Automatically inject copy buttons into any element using CSS selectors with advanced display conditions.
+1. **EASY: [Shortcodes](https://docs.clipboard.agency/guides/shortcodes/)**
+   Manually add copy controls with `[copy]` anywhere in your content.
 
-2. **[Automatic CSS Selector](https://docs.clipboard.agency/guides/css-selectors/)**  
-   Automatically add copy buttons to elements like `pre`, `code`, `blockquote`, or any custom selector.
+2. **AUTOMATIC: [Global Injector](https://docs.clipboard.agency/guides/global-injector/)**  
+   Automatically inject copy buttons into any element using [CS selectors](https://docs.clipboard.agency/guides/css-selectors/) like `pre`, `code`, `blockquote`, or any custom selector with advanced display conditions.
 
-3. **[Shortcodes](https://docs.clipboard.agency/guides/shortcodes/)**  
-   Manually add copy buttons using `[copy]` or `[copy_inline]` shortcodes anywhere in your content.
-
-4. **Elementor Widgets**  
+3. **Elementor Widgets**
    Add copy buttons visually using dedicated Elementor widgets.
 
-5. **Gutenberg Blocks**  
+4. **Gutenberg Blocks**  
    Insert copy buttons directly inside the WordPress block editor using Gutenberg blocks.
 
-=== METHOD 1 – Global Injector (NEW in v5.0.0) ===
+=== METHOD 3 – Manually with "Shortcodes" ===
+
+Use **`[copy]`** anywhere you want an explicit copy control (Classic editor, **Shortcode** block, widget areas, patterns, or PHP templates via `do_shortcode()`). **`[ctc]`** is the same shortcode with a shorter name—use either.
+
+**How it works (matches the plugin code)**
+
+* **Default** layout is the **inline** preset (clickable text + icon). Switch with **`preset="button"`**, **`preset="icon"`**, or **`preset="cover"`**.
+* **`text="…"`** (or text wrapped between `[copy]` and `[/copy]`) is what lands on the clipboard.
+* **`display="…"`** overrides the visible label when it must differ from the copied string (masked secrets, mailto links, etc.).
+* **Legacy pair:** **`text="…"`** + **`content="…"`** — `content` is copied, `text` is what visitors see (handy for hiding long URLs behind a short CTA).
+
+**Try it on a fresh install** — add a **Shortcode** block (or switch the block editor to **Code editor**), paste one snippet, **Update**, view the page, and tap the control.
+
+==== Example 1 – Datetime inside a sentence ====
+
+<pre>
+Next live workshop: [copy]2030-03-19 10:00 America/New_York[/copy] — copy the full value for your calendar tool.
+</pre>
+
+==== Example 2 – Email inside a sentence ====
+
+<pre>
+Billing questions? Email [copy]invoices@clipboard.agency[/copy] and include your order ID.
+</pre>
+
+==== Example 3 – Show the mailbox, copy a ready-made mailto link ====
+
+<pre>
+[copy display="support@clipboard.agency"]mailto:support@clipboard.agency?subject=Question%20from%20website[/copy]
+</pre>
+
+Visitors see **support@clipboard.agency**; the clipboard receives the full **mailto:** string with the subject line.
+
+==== Example 4 – Mini support block (swap in your real IDs) ====
+
+<pre>
+<p><strong>Before you open a ticket, include:</strong></p>
+<ul>
+<li>Order ID: [copy]WC-104592-UK[/copy]</li>
+<li>Line item SKU: [copy]BM-HOODIE-M-NVY[/copy]</li>
+<li>Return auth: [copy]REF-88C0A921[/copy]</li>
+</ul>
+</pre>
+
+==== Example 5 – Coupon inside marketing copy ====
+
+<pre>
+Launch week only — use [copy]SPRINGLAUNCH26[/copy] at checkout for 25% off your first year.
+</pre>
+
+==== Example 6 – Long store URL, short friendly label ====
+
+<pre>
+[copy text="https://www.amazon.com/dp/B0D1EXAMPLE/ref=nosim?tag=clipboard0d-20"]Copy our Amazon pick[/copy]
+</pre>
+
+The visitor reads **Copy our Amazon pick**; the clipboard gets the full tagged URL.
+
+==== Example 7 – Carrier-style tracking number ====
+
+<pre>
+Track this shipment: [copy]1Z999AA10123456784[/copy]
+</pre>
+
+==== Example 8 – Developer onboarding (framework installer) ====
+
+<pre>
+Run this once: [copy]npx create-next-app@latest my-shop --typescript --eslint --tailwind --app[/copy]
+</pre>
+
+==== Example 9 – One-line WP-CLI maintenance ====
+
+<pre>
+Safe cache flush: [copy]wp cache flush && wp rewrite flush[/copy]
+</pre>
+
+==== Example 10 – API key visible on screen vs clipboard ====
+
+<pre>
+Production key (rotate after testing): [copy text="sk_live_51QxYzAbCdEfGhIjKlMnOpQrStUvWx0123456789" display="sk_live_…6789"]
+</pre>
+
+Visitors only see the shortened mask; the full secret is still copied once for trusted teammates.
+
+==== Example 11 – Guest Wi‑Fi card ====
+
+<pre>
+SSID: [copy]Guest-Office-5G[/copy] · Passphrase: [copy text="WinterLake#2026!" display="••••••••••••"]
+</pre>
+
+==== Example 12 – Teams / Meet style link ====
+
+<pre>
+Join the stand-up: [copy]https://teams.microsoft.com/l/meetup-join/19%3ameeting_EXAMPLE%40thread.v2/0?context=%7b%22Tid%22%3a%22...%7d[/copy]
+</pre>
+
+==== Example 13 – Conference hashtag or emoji drop ====
+
+<pre>
+Share photos with [copy]#ClipboardAgencyLive2026[/copy] — we monitor that tag all week.
+</pre>
+
+==== Example 14 – Button preset (big tap target, copies a long shell line) ====
+
+<pre>
+[copy preset="button" button-text="Copy Docker install" text="curl -fsSL https://get.docker.com | sh"]
+</pre>
+
+==== Example 15 – Icon-only control in a tight layout ====
+
+<pre>
+Docker CE (Ubuntu): [copy text="sudo apt-get install docker-ce docker-ce-cli containerd.io" preset="icon" tooltip="Copy apt install line"]
+</pre>
+
+==== Example 16 – Optional open-after-copy URL (great for coupons) ====
+
+<pre>
+[copy preset="button" text="SAVE20" button-text="Copy code & checkout" redirect="https://clipboard.agency/checkout/?coupon=SAVE20"]
+</pre>
+
+==== Example 17 – Cover preset for a code/card preview ====
+
+<pre>
+[copy preset="cover" text="body { margin: 0; font-family: system-ui, sans-serif; }" button-text="Copy CSS"]body { margin: 0; … }[/copy]
+</pre>
+
+The visible card shows the shortened preview; the overlay copies the full CSS string.
+
+==== Example 18 – Legacy `text` + `content` pair (same idea as Example 6) ====
+
+<pre>
+[copy text="Open the parking map" content="https://maps.app.goo.gl/dQw4w9WgXcQ"]
+</pre>
+
+==== Example 19 – Bank-style reference (dummy data) ====
+
+<pre>
+SEPA reference: [copy]RF18539007547034[/copy]
+</pre>
+
+==== Example 20 – Plain JSON snippet for API testers ====
+
+<pre>
+Paste this body: [copy]{ "event": "signup", "plan": "pro", "trial_days": 14 }[/copy]
+</pre>
+
+=== METHOD 2 – Global Injector (NEW in v5.0.0) ===
 
 The **Global Injector** is the most powerful way to automatically add copy buttons anywhere on your website.
 
@@ -93,23 +233,24 @@ Use this method when you want copy buttons to appear **automatically across your
 
 **Example 1 – Code Snippets**
 
-If your posts contain code snippets inside the `<pre>` tag, simply set the selector to:
-
-`pre`
+If your posts contain code snippets inside the `<pre>` tag, simply set the selector to `pre` (without the angle brackets `<` and `>`).
 
 The plugin will automatically add a **copy button to every `<pre>` element**, allowing visitors to copy code snippets with one click.
 
 **Example 2 – Blockquotes**
 
-If you want users to copy quotes from your blog posts, set the selector to:
-
-`blockquote`
+If you want users to copy quotes from your blog posts, set the selector to `blockquote` (without the angle brackets `<` and `>`).
 
 A copy button will automatically appear for **all blockquote elements** on your site.
 
 You can target **any HTML element or custom class** using CSS selectors such as:
 
-`pre`, `code`, `blockquote`, `.coupon-code`, `.email-address`, or `.copy-this`
+- `pre` - If your posts contain code snippets inside the `<pre>` tag.
+- `code` - If your posts contain code snippets inside the `<code>` tag.
+- `blockquote` - If you want users to copy quotes from your blog posts.
+- `.coupon-code` - If your posts contain coupon codes.
+- `.email-address` - If your posts contain email addresses.
+- `.copy-this` - If you want to copy specific content.
 
 ==== How to Use with CSS Selector ====
 
@@ -123,69 +264,6 @@ For more detailed guides:
 
 - [Add copy buttons to blockquotes](https://docs.clipboard.agency/guides/shortcodes/)
 - [Add copy buttons to code snippets](https://clipboard.agency/blog/how-to-add-copy-buttons-to-code-blocks/)
-
-=== METHOD 3 – Manually with "Shortcodes" ===
-
-Use this method when you want to add a copy button **only to specific content** instead of applying it automatically across the entire site.
-
-The plugin provides two shortcodes:
-
-- `[copy]` – Wrap content inside the shortcode
-- `[copy_inline]` – Copy inline text using attributes
-
-==== Example – Wrapping Content ====
-
-```
-
-The Zoom meeting is scheduled on [copy]15 November 2022[/copy]. Please note it down.
-
-```
-
-This will add a copy button that allows users to copy **"15 November 2022"** with one click.
-
-==== Example – Inline Content ====
-
-You can use `[copy_inline]` to copy inline values such as emails, phone numbers, or links.
-
-```
-
-Contact us:
-
-* Email: [copy_inline text="[contact@clipboard.agency](mailto:contact@clipboard.agency)"]
-* Phone: [copy_inline text="+91 1234567890"]
-* Address: [copy_inline text="123, Street, City, State, Country"]
-* Website: [copy_inline text="[https://clipboard.agency/](https://clipboard.agency/)"]
-* Facebook: [copy_inline text="[https://www.facebook.com/clipboard.agency/](https://www.facebook.com/clipboard.agency/)"]
-
-```
-
-==== Example – Coupon Code ====
-
-```
-
-Use coupon code [copy_inline text="COUPONCODE"] to get 10% discount.
-
-```
-
-==== Example – Deal Link ====
-
-```
-
-Get the deal: [copy_inline text="[https://clipboard.agency/deal/](https://clipboard.agency/deal/)"]
-
-```
-
-==== Example – Username and Password ====
-
-```
-
-Username: [copy_inline text="username"]
-Password: [copy_inline text="password" display="********"]
-
-```
-
-This allows users to **copy sensitive values while displaying masked text**.
-```
 
 === METHOD 4 – Manually with "Elementor Widgets" ===
 
@@ -214,7 +292,7 @@ These widgets are useful for many types of content including:
 
 You can explore **live examples for all widgets here:**
 
-👉 [View Elementor Widget Demos](https://clipboard.agency/demos/)
+[View Elementor widget demos](https://clipboard.agency/demos/)
 
 ---
 
@@ -229,260 +307,116 @@ You can explore **live examples for all widgets here:**
 
 For full examples and widget demos:
 
-👉 [See All Live Demos](https://clipboard.agency/#demos)
+[See all live demos](https://clipboard.agency/#demos)
 
 ---
 
-== Key Benefits ==
+=== Key benefits ===
 
-- **Global Injector (NEW)** – Automatically inject copy buttons anywhere using CSS selectors with display conditions. 🎯  
-- **Display Conditions** – Control exactly where copy buttons appear for better performance. ⚡  
-- **Multiple Styles** – Choose from **Button, Icon, or Cover** styles. 🎨  
-- **Copy with One Click** – No need for highlighting or manual copying. 🎉  
-- **Multi-Purpose Usage** – Copy text, links, coupon codes, commands, prompts, and more. 🌐  
-- **Seamless Integration** – Works with most WordPress themes and plugins. 💼  
-- **Mobile Friendly** – Fully compatible with smartphones and tablets. 📱  
-- **Cross-Browser Compatible** – Works across all modern browsers. 🌐  
-- **Lightweight & Fast** – Designed to avoid slowing down your site. 🚀  
-- **Developer Friendly** – Easy to integrate with custom code and layouts. 👨‍💻  
-- **SEO Safe** – Does not impact search engine performance. 📈  
-- **Customization (PRO)** – Customize styles, behavior, and advanced features. 🎨  
+* **Global Injector** – Selector-based rules, display conditions, and live preview from the admin.
+* **One-click copy** – No manual selection; clearer affordances for code, coupons, and contact fields.
+* **Multiple presets** – **Button**, **Icon**, and **Cover** layouts to fit dense UI or minimal docs.
+* **Builder-native** – Deep **Elementor** coverage plus **Gutenberg** blocks for modern sites.
+* **Shortcodes** – `[copy]` / `[ctc]` for surgical placement in the classic editor, widgets, and templates.
+* **Mobile and cross-browser** – Tested behavior on common phones and current Chrome, Firefox, Safari, and Edge.
+* **Lightweight by design** – Pair rules with conditions so you are not loading UI where it is unused.
+* **PRO** – Extra customization, behavior options, and analytics when you need to scale or brand the experience.
 
 ---
 
-Upgrade to **PRO** and unlock advanced features, customization options, and analytics.
+**PRO** adds advanced customization and analytics. Compare plans:
 
-👉 https://clipboard.agency/pricing/
-
-## Popular Copy to Clipboard Plugin
-
-Over **10,000+ active websites** are using **Copy Anything to Clipboard** to easily add copy buttons across their content.
-
-The plugin is **fully compatible with all WordPress themes and plugins**.
-
-### Feature Requests
-
-Have an idea or suggestion?
-
-We welcome feedback and feature requests.
-
-👉 https://clipboard.agency/contact/
+https://clipboard.agency/pricing/
 
 ---
 
-## Frequently Asked Questions
+=== Trusted by thousands of WordPress sites ===
 
-### What is the Global Injector?
+**10,000+ active installs** rely on Copy Anything to Clipboard for docs, deals, dev blogs, and support content. It is built to cooperate with **popular themes and page builders** (including Elementor) instead of fighting your layout.
 
-The **Global Injector** (introduced in v5.0.0) allows you to automatically add copy buttons anywhere on your website using **CSS selectors**.
+=== Feature requests ===
 
-Features include:
+Ideas and edge cases help the roadmap. Share yours:
 
-- Target any element using CSS selectors
-- Choose style presets (Button, Icon, Cover)
-- Configure display conditions
-- Live preview while configuring
+https://clipboard.agency/contact/
 
-You can access it here:
-
-**WordPress Dashboard → Copy to Clipboard → Global Injector**
+**Installation, Elementor, Gutenberg, performance, and HTML vs plain text** are covered in the **FAQ** tab on this plugin page.
 
 ---
 
-### How do I add copy buttons to code snippets?
-
-Use the **Global Injector** or CSS selector method.
-
-Example selector:
-
-```
-
-pre
-
-```
-
-or
-
-```
-
-code
-
-```
-
-Steps:
-
-1. Go to **Copy to Clipboard**
-2. Click **Add New** or open **Global Injector**
-3. Enter selector `pre` or `code`
-4. Configure button style
-5. Save settings
-
-Copy buttons will automatically appear on all code blocks.
-
----
-
-### Can I add copy buttons to specific content only?
-
-Yes.
-
-Use the following shortcodes:
-
-**Block content**
-
-```
-
-[copy]Your text here[/copy]
-
-```
-
-**Inline content**
-
-```
-
-[copy_inline text="Text to copy"]
-
-```
-
-This allows you to add copy buttons only where needed.
-
----
-
-### Does this plugin work with Elementor?
-
-Yes.
-
-The plugin provides **25+ Elementor widgets**, including:
-
-- Copy Button
-- Copy Icon
-- Code Snippet
-- Coupon Code
-- Deal Link
-- Email Address
-- Phone Number
-- Blockquote
-- ChatGPT Prompt
-- and many more.
-
-Simply search for **"Copy"** in the Elementor widget panel.
-
----
-
-### Does this plugin work with Gutenberg?
-
-Yes.
-
-We provide Gutenberg blocks such as:
-
-- Copy Button
-- Copy Icon
-- Term Title
-- Social Share
-
-All blocks work seamlessly with the **WordPress Block Editor**.
-
----
-
-### Can I customize the copy button appearance?
-
-Yes.
-
-You can customize:
-
-- Button style
-- Icon style
-- Colors
-- Position (inside or outside content)
-- Button text
-
-The **Global Injector includes a live preview** so you can instantly see style changes.
-
-The **PRO version** unlocks additional customization options.
-
----
-
-### How can I control where copy buttons appear?
-
-Use **Display Conditions** inside the Global Injector.
-
-You can target:
-
-- Specific pages or posts
-- Post types
-- Categories
-- Tags
-- Custom taxonomies
-- User roles
-
-This helps optimize both **design and performance**.
-
----
-
-### Is the plugin mobile friendly?
-
-Yes.
-
-Copy functionality works perfectly on **mobile phones, tablets, and desktops**.
-
----
-
-### Does it work in all browsers?
-
-Yes.
-
-The plugin supports all modern browsers including:
-
-- Chrome
-- Firefox
-- Safari
-- Edge
-
----
-
-### Will this plugin slow down my website?
-
-No.
-
-The plugin is **lightweight and optimized for performance** and will not slow down your WordPress site.
-
----
-
-### Can the plugin copy HTML content?
-
-Yes.
-
-You can copy content as:
-
-- **Plain text**
-- **HTML format**
-
-This is useful for copying code snippets, formatted content, or rich text.
-
-=== Google Chrome Extension 🚀 ===
+=== Google Chrome Extension ===
 
 We also provide a **Google Chrome Extension** that allows users to quickly copy content from any website.
 
-You can install it directly from the Chrome Web Store:
-
-👉 https://chromewebstore.google.com/detail/copy-anything-to-clipboar/mdljigkhfeiobmhanibkgjkldnabeahl
+**Chrome Web Store:** https://chromewebstore.google.com/detail/copy-anything-to-clipboar/mdljigkhfeiobmhanibkgjkldnabeahl
 
 The extension works perfectly alongside the **Copy Anything to Clipboard WordPress plugin**, making it easy to copy text, links, commands, code snippets, and more across the web.
 
 ---
 
-=== Further Reading 📚 ===
+=== Further reading ===
 
-Learn more about the plugin and explore additional resources:
+* **Website:** https://clipboard.agency/
+* **Documentation:** https://clipboard.agency/doc/
+* **Live demos:** https://clipboard.agency/#demos
+* **Support:** https://clipboard.agency/contact/
+* **More plugins (WordPress.org profile):** https://wordpress.org/plugins/search/clipboardagency/
 
-- 🌐 Official website: https://clipboard.agency/
-- 📖 Documentation & guides: https://clipboard.agency/doc/
-- 🎬 Live demos: https://clipboard.agency/#demos
-- 💬 Contact support: https://clipboard.agency/contact/
-- 🔌 View all our WordPress plugins: https://wordpress.org/plugins/search/clipboardagency/
+If the plugin saves you time, you can support ongoing development here:
 
-If you find the plugin helpful, consider supporting development with a small donation:
+https://www.paypal.me/mwaghmare7/
 
-💖 https://www.paypal.me/mwaghmare7/
+---
+
+== FAQ ==
+
+= What is the Global Injector? =
+
+The **Global Injector** (from v5.0.0) adds copy controls wherever matching elements appear. You define a **CSS selector** (for example `pre`, `code`, or `.promo-code`), pick a **Button**, **Icon**, or **Cover** preset, optionally set **display conditions**, and preview before saving. Open **WordPress Dashboard → Copy to Clipboard → Global Injector**.
+
+= How do I add copy buttons to code snippets? =
+
+Create a **Global Injector** rule or a classic **CSS selector** entry with selector `pre` or `code`, choose a style, save, and matching code blocks get a copy control (subject to your display conditions).
+
+= Can I add copy buttons only on certain posts or pages? =
+
+Yes. Use **display conditions** in Global Injector, or use **shortcodes** only where you need them (`[copy]` or `[ctc]`).
+
+= Does this plugin work with Elementor? =
+
+Yes. With Elementor active, edit a page, search the panel for **Copy**, and use the dedicated widgets (copy button, code snippet, coupon, prompts, and more).
+
+= Does this plugin work with Gutenberg? =
+
+Yes. Insert the bundled blocks (for example **Copy Button** and **Copy Icon**) from the block inserter.
+
+= Can I customize how the copy control looks? =
+
+Yes—styles, colors, placement, and labels are configurable in the admin. **Global Injector** includes a **live preview**. Deeper styling and analytics are part of **PRO**.
+
+= How can I control where copy buttons appear? =
+
+Use **display conditions** in Global Injector to limit rules by post type, taxonomy, individual content, user role, and more so design and asset loading stay intentional.
+
+= Is the plugin mobile friendly? =
+
+Yes. Copy actions are built for phones and tablets as well as desktop.
+
+= Does it work in all browsers? =
+
+Yes. Current versions of **Chrome**, **Firefox**, **Safari**, and **Edge** are supported.
+
+= Will this plugin slow down my website? =
+
+It is built to stay lightweight. Combine **display conditions** with how you scope rules so scripts and styles load where copy UI is actually used.
+
+= Can the plugin copy HTML as well as plain text? =
+
+Yes. Depending on settings and shortcode attributes, content can be copied as **plain text** or **HTML**, which helps with code snippets and formatted excerpts.
+
+= Where can I read documentation or get support? =
+
+Guides: https://clipboard.agency/doc/ — Contact: https://clipboard.agency/contact/
 
 ---
 
@@ -495,20 +429,20 @@ Add and manage automatic copy button rules with **CSS selectors, display conditi
 Copy buttons automatically appear on **code snippets, blockquotes, commands, coupon codes, or any content element**.
 
 3. **Shortcodes and Gutenberg Blocks**  
-Add copy buttons manually using `[copy]` and `[copy_inline]` shortcodes or use **Copy Button and Copy Icon blocks** in the WordPress block editor.
+Add copy controls manually with `[copy]` / `[ctc]`, or use **Copy Button** and **Copy Icon** blocks in the WordPress block editor.
 
 ---
 
 == Installation ==
 
-1. Install the **Copy Anything to Clipboard** plugin from the WordPress plugin directory, or upload it to:
+You can go from zero to working copy buttons in a few minutes—install the plugin, activate it, then add either a **Global Injector** rule or a **shortcode** on a test page.
 
-```
+1. Install **Copy Anything to Clipboard** from this directory, or upload the plugin folder to:
 
+<pre>
 wp-content/plugins
 
-```
-
+</pre>
 2. Activate the plugin through the **Plugins** menu in WordPress.
 
 3. Go to **WordPress Admin → Copy to Clipboard**.
@@ -522,7 +456,7 @@ wp-content/plugins
   Automatically add copy buttons to elements like `pre`, `code`, or `blockquote`.
 
 - **Shortcodes**  
-  Manually add copy buttons using `[copy]` or `[copy_inline]`.
+  Manually add copy controls using `[copy]` or `[ctc]`.
 
 - **Elementor Widgets**  
   Drag-and-drop widgets for Elementor page builder.
@@ -532,7 +466,7 @@ wp-content/plugins
 
 For full setup instructions, read the documentation:
 
-👉 https://clipboard.agency/doc/
+https://clipboard.agency/doc/
 
 ---
 
@@ -554,10 +488,15 @@ Allow visitors to quickly share content across social media platforms.
 
 == Changelog ==
 
+= 5.5.2 =
+
+* **Fix: [copy] shortcode display with `content` attribute and inner markup** – When the legacy `content` attribute sets the clipboard payload and the shortcode also wraps inner content (for example `[copy content="/path/to/file"]Install path[/copy]`), the visible label now uses the inner content for `display` while `text` remains what gets copied. Previously the label could fall back to the same value as `content` and ignore the wrapped text.
+* **Improvement: Compatibility to WordPress 6.9.4** – The plugin is now compatible with WordPress 6.9.4 and the latest Gutenberg plugin.
+
 = 5.5.1 =
 
 * **Fix: Highlight.js / code block copy formatting** – Copy buttons added via Global Injector to `pre` and `code` blocks (including themes using Highlight.js, such as the setup on zanglikun.com) now preserve indentation and whitespace when copying, so Java / PHP / shell snippets paste exactly as shown instead of being flattened into a single left-aligned block. Thanks to Likun Zang for reporting the issue.
-* **Fix: [copy] shortcode in table cells** – `[copy]` and `[copy_inline]` inside table plugins (Data Tables Generator by Supsystic, wpDataTables) now work correctly. Copy script and styles load when the table shortcode is on the page, and copy buttons work with cached or dynamically rendered table content. Thanks to [@jayceezay](https://wordpress.org/support/users/jayceezay/) for reporting. See: https://wordpress.org/support/topic/copy-shortcode-in-table-cells-not-working-anymore/
+* **Fix: [copy] shortcode in table cells** – `[copy]` inside table plugins (Data Tables Generator by Supsystic, wpDataTables) now works correctly. Scripts and styles load when the table shortcode is on the page, and copy controls work with cached or dynamically rendered table content. Thanks to [@jayceezay](https://wordpress.org/support/users/jayceezay/) for reporting. See: https://wordpress.org/support/topic/copy-shortcode-in-table-cells-not-working-anymore/
 * **Fix: Thrive Architect HTML block integration** – Copy buttons rendered inside a Thrive Architect HTML block (for example, custom blockquotes with `ctc-wrapper` markup) are now reliably detected and bound by the frontend script, so clicking the button correctly copies the content even when the HTML is pre-rendered or cached.
 * **Improvement: Shortcode copy buttons (event delegation)** – Copy buttons from `[copy]` shortcodes now use document-level event delegation, so buttons added dynamically (e.g. by table plugins after page load) remain clickable.
 * **Improvement: Code / pre support in Global Injector** – Global Injector rules targeting `pre` / `code` elements now integrate more safely with external highlighters and pre-rendered content, ensuring the “Copy Anything to Clipboard” behavior stays consistent without breaking existing theme or page builder output.
@@ -653,7 +592,7 @@ Allow visitors to quickly share content across social media platforms.
   * Multiple style presets (Button, Icon, Cover)
   * Live preview in the editor
   * Performance-optimized asset loading
-* **New: Refined Shortcode System** - Enhanced `[copy]` and `[copy_inline]` shortcodes with improved attributes and flexibility.
+* **New: Refined Shortcode System** - Enhanced `[copy]` / `[ctc]` shortcodes with improved attributes and flexibility.
 * **New: Style Presets** - Pre-built button, icon, and cover styles for quick setup.
 * **Improvement: WordPress 6.7+ Compatibility** - Fixed `_load_textdomain_just_in_time` notices with proper plugin initialization timing.
 * **Improvement: Complete Asset Restructure** - Reorganized frontend and admin assets for better performance.
@@ -814,7 +753,7 @@ Allow visitors to quickly share content across social media platforms.
 
 = 3.1.0 =
 
-* New: Added new shortcode [copy_inline] which allow you to copy content from the inline element.
+* New: Added inline-style copy shortcode for paragraph-level snippets (unified under `[copy]` in v5+).
 * New: Added Elementor widget Copy Icon.
 * New: Added Elementor widget Copy Button.
 * New: Added Elementor widget Email Sample.

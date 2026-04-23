@@ -178,7 +178,7 @@ class ContactInformation extends Widget_Base {
 								</div>
 								<div class="ctc-block-field-value">
 									<?php 
-                echo do_shortcode( '[copy_inline text="' . esc_html( $contact_field['value'] ) . '"]' );
+                echo do_shortcode( '[copy]' . esc_html( $contact_field['value'] ) . '[/copy]' );
                 ?>
 								</div>
 							</div>

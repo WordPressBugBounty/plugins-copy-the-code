@@ -2,7 +2,7 @@
 /**
  * Data Tables Generator by Supsystic integration.
  *
- * Registers the Supsystic table shortcode as a container so that [copy] / [copy_inline]
+ * Registers the Supsystic table shortcode as a container so that `[copy]`
  * inside table cells trigger script enqueue and work with cached/dynamic table output.
  *
  * @package CTC

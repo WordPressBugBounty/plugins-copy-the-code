@@ -141,7 +141,7 @@ class Table extends Widget_Base {
             echo '<tr>';
             echo '<td class="ctc-table__key">' . esc_html( $heading ) . '</td>';
             foreach ( $content as $row ) {
-                echo '<td class="ctc-table__value">' . do_shortcode( '[copy_inline text="' . esc_html( $row[$heading_index] ) . '"]' ) . '</td>';
+                echo '<td class="ctc-table__value">' . do_shortcode( '[copy]' . esc_html( $row[$heading_index] ) . '[/copy]' ) . '</td>';
             }
             echo '</tr>';
         }
@@ -163,7 +163,7 @@ class Table extends Widget_Base {
         foreach ( $content as $row ) {
             echo '<tr>';
             foreach ( $row as $value ) {
-                echo '<td class="ctc-table__value">' . do_shortcode( '[copy_inline text="' . esc_html( $value ) . '"]' ) . '</td>';
+                echo '<td class="ctc-table__value">' . do_shortcode( '[copy]' . esc_html( $value ) . '[/copy]' ) . '</td>';
             }
             echo '</tr>';
         }
