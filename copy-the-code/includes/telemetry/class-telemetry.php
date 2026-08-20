@@ -18,7 +18,7 @@ use CTC\Analytics\Database;
 /**
  * Telemetry Class
  *
- * Manages opt-in, payload building, and sending telemetry to signals.bmapi.workers.dev.
+ * Manages opt-in, payload building, and sending telemetry to signals.surror.workers.dev.
  *
  * @since 5.2.0
  */
@@ -69,7 +69,7 @@ class Telemetry {
 	 *
 	 * @var string
 	 */
-	const ENDPOINT = 'https://signals.bmapi.workers.dev/v1/telemetry';
+	const ENDPOINT = 'https://signals.surror.workers.dev/v1/telemetry';
 
 	/**
 	 * Length of truncated install_id hash (sha256 produces 64 chars).

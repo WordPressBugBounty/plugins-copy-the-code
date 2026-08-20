@@ -3,7 +3,7 @@ Contributors: clipboardagency, freemius
 Donate link: https://www.paypal.me/mwaghmare7/
 Tags: clipboard, copy to clipboard, copy code, elementor, shortcode
 Tested up to: 6.9
-Stable tag: 5.5.2
+Stable tag: 5.5.3
 Requires PHP: 5.6
 Requires at least: 4.4
 License: GPLv2 or later
@@ -91,12 +91,11 @@ Visitors see **support@clipboard.agency**; the clipboard receives the full **mai
 ==== Example 4 – Mini support block (swap in your real IDs) ====
 
 <pre>
-<p><strong>Before you open a ticket, include:</strong></p>
-<ul>
-<li>Order ID: [copy]WC-104592-UK[/copy]</li>
-<li>Line item SKU: [copy]BM-HOODIE-M-NVY[/copy]</li>
-<li>Return auth: [copy]REF-88C0A921[/copy]</li>
-</ul>
+Before you open a ticket, include:
+
+- Order ID: [copy]WC-104592-UK[/copy]
+- Line item SKU: [copy]BM-HOODIE-M-NVY[/copy]
+- Return auth: [copy]REF-88C0A921[/copy]
 </pre>
 
 ==== Example 5 – Coupon inside marketing copy ====
@@ -348,7 +347,7 @@ https://clipboard.agency/contact/
 
 We also provide a **Google Chrome Extension** that allows users to quickly copy content from any website.
 
-**Chrome Web Store:** https://chromewebstore.google.com/detail/copy-anything-to-clipboar/mdljigkhfeiobmhanibkgjkldnabeahl
+[Chrome Web Store](https://chromewebstore.google.com/detail/copy-anything-to-clipboar/mdljigkhfeiobmhanibkgjkldnabeahl)
 
 The extension works perfectly alongside the **Copy Anything to Clipboard WordPress plugin**, making it easy to copy text, links, commands, code snippets, and more across the web.
 
@@ -356,15 +355,15 @@ The extension works perfectly alongside the **Copy Anything to Clipboard WordPre
 
 === Further reading ===
 
-* **Website:** https://clipboard.agency/
-* **Documentation:** https://clipboard.agency/doc/
-* **Live demos:** https://clipboard.agency/#demos
-* **Support:** https://clipboard.agency/contact/
-* **More plugins (WordPress.org profile):** https://wordpress.org/plugins/search/clipboardagency/
+* [Website](https://clipboard.agency/)
+* [Documentation](https://clipboard.agency/doc/)
+* [Live demos](https://clipboard.agency/#demos)
+* [Support](https://clipboard.agency/contact/)
+* [More plugins on WordPress.org](https://wordpress.org/plugins/search/clipboardagency/)
 
 If the plugin saves you time, you can support ongoing development here:
 
-https://www.paypal.me/mwaghmare7/
+[Support development on PayPal](https://www.paypal.me/mwaghmare7/)
 
 ---
 
@@ -409,6 +408,10 @@ Yes. Current versions of **Chrome**, **Firefox**, **Safari**, and **Edge** are s
 = Will this plugin slow down my website? =
 
 It is built to stay lightweight. Combine **display conditions** with how you scope rules so scripts and styles load where copy UI is actually used.
+
+= Can I copy one value but show a different label? =
+
+Yes. The legacy `content` attribute is what gets copied. Inner shortcode text is the visible label. Example: `[copy content="/path/to/file"]Install path[/copy]` copies `/path/to/file` and shows **Install path**.
 
 = Can the plugin copy HTML as well as plain text? =
 
@@ -487,6 +490,13 @@ Display the title of the current taxonomy term such as category or tag.
 Allow visitors to quickly share content across social media platforms.
 
 == Changelog ==
+
+= 5.5.3 =
+
+* **Improvement: WordPress 6.9 compatibility** – Confirmed Tested up to WordPress 6.9.
+* **Docs: [copy] `content` vs inner label** – FAQ now documents that `content` is the clipboard payload and inner shortcode text is the visible label (for example `[copy content="/path/to/file"]Install path[/copy]`).
+* **Improvement: Telemetry endpoint** – Opt-in usage telemetry now posts to `signals.surror.workers.dev`.
+* **Improvement: Freemius SDK** – Updated WordPress SDK to 2.13.4.
 
 = 5.5.2 =
 
