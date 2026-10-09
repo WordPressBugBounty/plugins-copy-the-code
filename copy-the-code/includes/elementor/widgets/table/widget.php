@@ -27,8 +27,15 @@ class Table extends Widget_Base {
      */
     public function __construct( $data = [], $args = null ) {
         parent::__construct( $data, $args );
-        // Block.
-        wp_enqueue_style(
+        // Register assets; Elementor enqueues via get_*_depends() when used.
+        wp_register_style(
+            'ctc-blocks-core',
+            CTC_URI . 'includes/assets/css/style.css',
+            [],
+            CTC_VER,
+            'all'
+        );
+        wp_register_style(
             'ctc-el-table',
             CTC_URI . 'includes/elementor/widgets/table/style.css',
             ['ctc-blocks-core'],

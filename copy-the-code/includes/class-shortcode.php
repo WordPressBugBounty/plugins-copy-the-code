@@ -84,8 +84,8 @@ class Shortcode {
 			'copy-as'       => 'text',      // 'text' or 'html' (legacy).
 			'copy_as'       => '',          // Copy as: text, html, text_and_html, image, json, svg.
 
-			// Preset/Style.
-			'preset'        => 'inline',    // 'button', 'icon', 'inline', 'cover'.
+			// Preset/Style. Empty default so legacy style="button" can map in normalize_legacy_atts().
+			'preset'        => '',          // 'button', 'icon', 'inline', 'cover' (default inline after normalize).
 
 			// Text.
 			'button-text'   => '',          // Button text (overrides preset default).
@@ -256,7 +256,7 @@ class Shortcode {
 			$atts['tooltip'] = __( 'Copy to clipboard', 'ctc' );
 		}
 
-		// Preset from legacy style.
+		// Preset from legacy style (style="button|icon|cover").
 		if ( empty( $atts['preset'] ) && ! empty( $atts['style'] ) ) {
 			$style_map = [
 				'icon'   => 'icon',
@@ -266,6 +266,9 @@ class Shortcode {
 			if ( isset( $style_map[ $atts['style'] ] ) ) {
 				$atts['preset'] = $style_map[ $atts['style'] ];
 			}
+		}
+		if ( empty( $atts['preset'] ) ) {
+			$atts['preset'] = 'inline';
 		}
 
 		// Button text.

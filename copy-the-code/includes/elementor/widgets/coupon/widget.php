@@ -28,18 +28,39 @@ class Coupon extends Widget_Base {
      */
     public function __construct( $data = [], $args = null ) {
         parent::__construct( $data, $args );
-        // Block.
-        wp_enqueue_style(
-            'ctc-el-coupon',
-            CTC_URI . 'includes/elementor/widgets/coupon/style.css',
+        // Register assets; Elementor enqueues via get_*_depends() when used.
+        wp_register_style(
+            'ctc-blocks-core',
+            CTC_URI . 'includes/assets/css/style.css',
             [],
             CTC_VER,
             'all'
         );
-        wp_enqueue_script(
+        wp_register_script(
+            'ctc-lib-core',
+            CTC_URI . 'assets/frontend/js/lib/ctc.js',
+            ['jquery'],
+            CTC_VER,
+            true
+        );
+        wp_register_script(
+            'ctc-blocks-core',
+            CTC_URI . 'includes/assets/js/core.js',
+            ['ctc-lib-core'],
+            CTC_VER,
+            true
+        );
+        wp_register_style(
+            'ctc-el-coupon',
+            CTC_URI . 'includes/elementor/widgets/coupon/style.css',
+            ['ctc-blocks-core'],
+            CTC_VER,
+            'all'
+        );
+        wp_register_script(
             'ctc-el-coupon',
             CTC_URI . 'includes/elementor/widgets/coupon/script.js',
-            [],
+            ['jquery', 'ctc-lib-core', 'ctc-blocks-core'],
             CTC_VER,
             true
         );

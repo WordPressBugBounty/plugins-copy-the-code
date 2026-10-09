@@ -119,15 +119,16 @@ class Telemetry {
 	}
 
 	/**
-	 * Generate a stable install ID hash from the current domain.
+	 * Generate a stable install ID hash from the current domain slug.
 	 *
 	 * Same domain (e.g. example.com, app.example.com) always yields the same id,
 	 * so uninstall + reactivate on the same site is not counted as a new install.
+	 * Uses the slug form so existing install_id hashes stay stable.
 	 *
 	 * @return string
 	 */
 	private static function get_install_id_hash() {
-		$domain = self::get_domain();
+		$domain = self::get_domain_slug();
 		$salt   = defined( 'AUTH_KEY' ) ? AUTH_KEY : 'ctc-telemetry-salt';
 		$full   = hash( 'sha256', $domain . $salt );
 		return substr( $full, 0, self::INSTALL_ID_HASH_LENGTH );
@@ -192,7 +193,8 @@ class Telemetry {
 			}
 		}
 
-		$domain = self::get_domain();
+		// Real hostname for dashboards (e.g. example.com). install_id still uses get_domain_slug().
+		$domain = self::get_hostname();
 		$env    = [
 			'wp_version'           => get_bloginfo( 'version' ),
 			'php_version'          => PHP_VERSION,
@@ -240,17 +242,42 @@ class Telemetry {
 	}
 
 	/**
-	 * Get domain slug from home URL.
+	 * Hostname from home URL (no www), for telemetry environment.domain.
 	 *
 	 * @return string
 	 */
-	private static function get_domain() {
+	private static function get_hostname() {
+		$host = wp_parse_url( home_url(), PHP_URL_HOST );
+		if ( empty( $host ) ) {
+			return '';
+		}
+		$host = preg_replace( '/^www\./', '', strtolower( $host ) );
+		/**
+		 * Filter the hostname sent in telemetry environment.domain.
+		 *
+		 * @param string $host Hostname without www.
+		 */
+		return apply_filters( 'ctc/telemetry/hostname', $host );
+	}
+
+	/**
+	 * Domain slug used only for stable install_id hashing (must not change format).
+	 *
+	 * @return string
+	 */
+	private static function get_domain_slug() {
 		$host = wp_parse_url( home_url(), PHP_URL_HOST );
 		if ( empty( $host ) ) {
 			return '';
 		}
 		$host = preg_replace( '/^www\./', '', $host );
 		$slug = sanitize_key( str_replace( '.', '-', $host ) );
+		/**
+		 * Filter the domain slug used for install_id hashing.
+		 * Changing this remaps install identity — avoid unless intentional.
+		 *
+		 * @param string $slug Slug like example-com.
+		 */
 		return apply_filters( 'ctc/telemetry/domain', $slug );
 	}
 

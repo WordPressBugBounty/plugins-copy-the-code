@@ -29,7 +29,7 @@ function ctc_fs() {
     require_once $freemius_sdk_path;
     $ctc_fs = fs_dynamic_init( [
         'id'               => '2780',
-        'slug'             => 'ctc',
+        'slug'             => 'copy-the-code',
         'type'             => 'plugin',
         'public_key'       => 'pk_15a174f8c30f506a9a35ccbf0fa76',
         'is_premium'       => false,
@@ -38,9 +38,9 @@ function ctc_fs() {
         'has_paid_plans'   => true,
         'has_affiliation'  => 'selected',
         'menu'             => [
-            'slug'           => 'ctc-global-injector',
+            'slug'           => 'ctc',
             'override_exact' => true,
-            'first-path'     => 'options-general.php?page=ctc-global-injector',
+            'first-path'     => 'options-general.php?page=ctc',
             'contact'        => true,
             'support'        => true,
             'affiliation'    => false,
@@ -110,7 +110,7 @@ function ctc_cleanup_on_uninstall() {
  * @return string
  */
 function ctc_fs_settings_url() {
-    return admin_url( 'options-general.php?page=ctc-global-injector' );
+    return admin_url( 'options-general.php?page=ctc' );
 }
 
 // Initialize Freemius on plugins_loaded (after textdomain is loaded).

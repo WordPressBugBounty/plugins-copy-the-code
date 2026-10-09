@@ -2,8 +2,8 @@
 Contributors: clipboardagency, freemius
 Donate link: https://www.paypal.me/mwaghmare7/
 Tags: clipboard, copy to clipboard, copy code, elementor, shortcode
-Tested up to: 6.9
-Stable tag: 5.5.3
+Tested up to: 7.1.3
+Stable tag: 5.5.4
 Requires PHP: 5.6
 Requires at least: 4.4
 License: GPLv2 or later
@@ -490,6 +490,13 @@ Display the title of the current taxonomy term such as category or tag.
 Allow visitors to quickly share content across social media platforms.
 
 == Changelog ==
+
+= 5.5.4 =
+
+* **Fix: Blank admin dashboard / Global Injector pages** – Full-bleed React admin screens (Dashboard, Global Injector, Rules list, Analytics) no longer collapse under `#wpbody`, which previously clipped content below the header. Thanks to [@deartanker](https://wordpress.org/support/users/deartanker/) for reporting. See: https://wordpress.org/support/topic/dashboard-page-is-blank-2/
+* **Fix: Elementor widget assets loading on every page** – Elementor widgets now register styles/scripts and let Elementor enqueue them only when the widget is present, instead of loading all widget assets on every Elementor page. Copy buttons still load the shared core script when needed.
+* **Improvement: Freemius first-path** – Freemius activation and account screens now use the Dashboard (`page=ctc`) instead of the Global Injector editor, so Add New Rule is not taken over during opt-in.
+* **Improvement: WordPress 7.1.3 compatibility** – Confirmed Tested up to WordPress 7.1.3.
 
 = 5.5.3 =
 

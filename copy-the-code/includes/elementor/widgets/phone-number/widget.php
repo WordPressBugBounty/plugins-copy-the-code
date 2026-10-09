@@ -22,23 +22,29 @@ class PhoneNumber extends Widget_Base {
      */
     public function __construct( $data = [], $args = null ) {
         parent::__construct( $data, $args );
-        // Core.
-        wp_enqueue_style(
+        // Register assets; Elementor enqueues via get_*_depends() when used.
+        wp_register_style(
             'ctc-blocks',
             CTC_URI . 'includes/assets/css/style.css',
             [],
             CTC_VER,
             'all'
         );
-        wp_enqueue_script(
+        wp_register_script(
             'ctc-lib-core',
             CTC_URI . 'assets/frontend/js/lib/ctc.js',
             ['jquery'],
             CTC_VER,
             true
         );
-        // Block.
-        wp_enqueue_style(
+        wp_register_script(
+            'ctc-blocks-core',
+            CTC_URI . 'includes/assets/js/core.js',
+            ['ctc-lib-core'],
+            CTC_VER,
+            true
+        );
+        wp_register_style(
             'ctc-el-phone-number',
             CTC_URI . 'includes/elementor/widgets/phone-number/style.css',
             ['ctc-blocks'],
@@ -51,7 +57,7 @@ class PhoneNumber extends Widget_Base {
      * Get script dependencies
      */
     public function get_script_depends() {
-        return ['ctc-el-phone-number'];
+        return ['ctc-lib-core', 'ctc-blocks-core'];
     }
 
     /**
