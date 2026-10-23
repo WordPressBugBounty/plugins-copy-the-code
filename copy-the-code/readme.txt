@@ -3,7 +3,7 @@ Contributors: clipboardagency, freemius
 Donate link: https://www.paypal.me/mwaghmare7/
 Tags: clipboard, copy to clipboard, copy code, elementor, shortcode
 Tested up to: 7.1.3
-Stable tag: 5.5.4
+Stable tag: 5.5.5
 Requires PHP: 5.6
 Requires at least: 4.4
 License: GPLv2 or later
@@ -490,6 +490,10 @@ Display the title of the current taxonomy term such as category or tag.
 Allow visitors to quickly share content across social media platforms.
 
 == Changelog ==
+
+= 5.5.5 =
+
+* **Security: Stored XSS in [copy] shortcode success text** – Contributor-controlled `success-text` / `copied-text` / `button-text` values are no longer written into the page via `innerHTML`. Frontend feedback now uses `textContent`, and shortcode attributes are sanitized after HTML-entity decode so entity-encoded markup cannot run in an Editor or Administrator session. Reported via WPScan by John Ryan Albon.
 
 = 5.5.4 =
 

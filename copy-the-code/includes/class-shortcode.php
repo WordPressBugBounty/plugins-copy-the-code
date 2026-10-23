@@ -240,12 +240,18 @@ class Shortcode {
 			$atts['display'] = html_entity_decode( $atts['display'], ENT_QUOTES | ENT_HTML5, 'UTF-8' );
 		}
 
-		// Success text.
+		// Success text (plain text only — never HTML; written into the DOM via JS).
 		if ( empty( $atts['success-text'] ) && ! empty( $atts['copied-text'] ) ) {
 			$atts['success-text'] = $atts['copied-text'];
 		}
+		if ( ! empty( $atts['success-text'] ) ) {
+			$atts['success-text'] = $this->sanitize_plain_text_attr( $atts['success-text'] );
+		}
 		if ( empty( $atts['success-text'] ) ) {
 			$atts['success-text'] = __( 'Copied!', 'ctc' );
+		}
+		if ( ! empty( $atts['copied-text'] ) ) {
+			$atts['copied-text'] = $this->sanitize_plain_text_attr( $atts['copied-text'] );
 		}
 
 		// Tooltip.
@@ -254,6 +260,8 @@ class Shortcode {
 		}
 		if ( empty( $atts['tooltip'] ) ) {
 			$atts['tooltip'] = __( 'Copy to clipboard', 'ctc' );
+		} else {
+			$atts['tooltip'] = $this->sanitize_plain_text_attr( $atts['tooltip'] );
 		}
 
 		// Preset from legacy style (style="button|icon|cover").
@@ -271,9 +279,11 @@ class Shortcode {
 			$atts['preset'] = 'inline';
 		}
 
-		// Button text.
+		// Button text (plain text only — also written back via JS from data-ctc-original).
 		if ( empty( $atts['button-text'] ) ) {
 			$atts['button-text'] = __( 'Copy', 'ctc' );
+		} else {
+			$atts['button-text'] = $this->sanitize_plain_text_attr( $atts['button-text'] );
 		}
 
 		// Redirect URL: prefer redirect attribute; fall back to link for backward compatibility.
@@ -317,6 +327,23 @@ class Shortcode {
 		}
 
 		return $atts;
+	}
+
+	/**
+	 * Sanitize a shortcode attribute that must remain plain text.
+	 *
+	 * Decodes HTML character references first so entity-encoded tags (e.g. &#60;img&#62;)
+	 * cannot bypass sanitize_text_field / tag stripping.
+	 *
+	 * @since 5.5.5
+	 *
+	 * @param string $value Raw attribute value.
+	 * @return string Plain text safe for data-* attributes and textContent insertion.
+	 */
+	private function sanitize_plain_text_attr( $value ) {
+		$value = html_entity_decode( (string) $value, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+		$value = wp_strip_all_tags( $value );
+		return sanitize_text_field( $value );
 	}
 
 	/**
